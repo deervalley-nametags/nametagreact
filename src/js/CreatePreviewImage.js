@@ -96,6 +96,7 @@ function CreatePreviewImage(data) {
     //console.log(data); //correct injection would be e.g. data.data.colorCode
     let tagType = colorCodeToClass(data.data.colorCode);
     //console.log(tagType.img);
+    tagType.bg = tagType.bg + "  justify-content-between";
 
     //return page with compiled data
     return (
@@ -104,18 +105,18 @@ function CreatePreviewImage(data) {
             <Row className={ tagType.bg }>
                 <Col xs="auto" className={ tagType.img }>
                 </Col>
-                <Col>
-                    <Row className="title-text">
+                <Col xs="auto">
+                    <Row className="title-text justify-content-center">
                         { data.data.name }
                     </Row>
-                    <Row className="smaller-text">
+                    <Row className="smaller-text justify-content-center">
                         { data.data.secondLine }
                     </Row>
-                    <Row className="smaller-text">
+                    <Row className="smaller-text justify-content-center">
                         { data.data.thirdLine }
                     </Row>
                 </Col>
-                <Col>
+                <Col xs="auto">
 
                 </Col>
             </Row>

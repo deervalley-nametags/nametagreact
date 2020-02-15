@@ -16,6 +16,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const HomePage = lazy( () => import('./HomePage.js'));
 const StatusPage = lazy( () => import('./StatusPage.js'));
 const AdminPage = lazy( () => import('./AdminPage.js'));
+const CreateTagPage = lazy( () => import('./CreateTagPage.js'));
 
 //lazy load spinner
 const renderLoader = (
@@ -49,6 +50,9 @@ function App() {
               <AdminPage />
             </Suspense>
           </Route>
+          <Suspense fallback={ renderLoader }>
+            <Route path="/create/:id" component={CreateTagPage} />
+          </Suspense>
         </Switch>
       </Container>
     </Router>
