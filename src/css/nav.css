@@ -1,0 +1,50 @@
+a{
+    color: white !important;
+}
+a:hover{
+    text-decoration: none !important;
+}
+
+#title-banner{
+    position: relative;
+    background-image: url("../img/banner.jpg");
+    height: 200px;
+    background-color: #000;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 5px;
+    margin: 0px auto;
+    justify-content: center;
+}
+#banner-h3{
+    color: white;
+    font-size: 45px;
+    margin-top: 0px;
+    position: absolute;
+    top: 0px;
+    font-weight: 500;
+}
+#admin-login-button{
+    background-color: rgba(0, 0, 0, 0.0);
+    height: 40px;
+    width: 40px;
+    border: none;
+    cursor: default;
+    position: absolute;
+    top: 88px;
+    left: 50%;
+    margin-left: -65px;
+}
+#status-search-bar{
+    width: 300px;
+}
+
+.nav-h4-bar-bg{
+    background-color: #ddd;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+.nav-h4-bar{
+    font-size: 20px;
+    padding-top: 5px;
+}
