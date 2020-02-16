@@ -11,6 +11,7 @@ import {
   Spinner
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { dbUtility } from './dbUtility.js';
 
 //lazy imports
 const HomePage = lazy( () => import('./HomePage.js'));
@@ -27,11 +28,8 @@ const renderLoader = (
   </Spinner>
 );
 
-
 //start main app: mainly routing
 function App() {
-  
-
   return (
     <Router>
       <NavPage />

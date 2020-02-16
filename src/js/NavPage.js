@@ -1,17 +1,7 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { 
-    faHome, 
-    faProjectDiagram,
-    faBars,
-    faEnvelope,
-    faCaretSquareLeft,
-    faCode
-} from '@fortawesome/free-solid-svg-icons';
+import React from 'react';
 import { Navbar, Container, Button } from 'react-bootstrap';
 import '../css/nav.css';
 import {
-    BrowserRouter as Router,
     Switch,
     Route,
     NavLink

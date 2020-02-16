@@ -1,2 +1,7 @@
 onclicks:
 admin button
+
+
+create tag no red hover
+
+tag name input css long name no wrap
