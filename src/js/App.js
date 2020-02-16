@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import '../css/app.css';
 import NavPage from './NavPage.js';
 import {
@@ -30,6 +30,8 @@ const renderLoader = (
 
 //start main app: mainly routing
 function App() {
+  
+
   return (
     <Router>
       <NavPage />

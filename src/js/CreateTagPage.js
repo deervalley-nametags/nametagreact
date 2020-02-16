@@ -16,8 +16,8 @@ const CreateTagPage = ({ match, location }) => {
     //the number it grabs in the url is actually a string, so make it int
     let thisColorCode = parseInt(match.params.id);
 
-    //live data for name and secondLine and thirdLine if applicable
-    
+    //no global var's, evil!
+    const[ globalSubmitArray, setGlobalSubmitArray ] = useState([]);
 
     //return
     return (
@@ -46,7 +46,7 @@ const CreateTagPage = ({ match, location }) => {
             <Row>
                 <Col>
                     <Row>Preview: </Row>
-                    <Row><CreatePreviewImage data={{ colorCode: thisColorCode }} /></Row>
+                    <Row><CreatePreviewImage data={{ colorCode: thisColorCode, name: globalSubmitArray[1].name }} /></Row>
                 </Col>
             </Row>
         </Container>
