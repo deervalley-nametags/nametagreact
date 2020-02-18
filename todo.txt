@@ -1,7 +1,9 @@
 onclicks:
-admin button
+admin button + login
 
 
-create tag no red hover
+create tag start-tag fix
 
 tag name input css long name no wrap
+
+unfinished tags nav bar smaller screens padding

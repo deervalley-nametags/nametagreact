@@ -93,6 +93,16 @@ function colorCodeToClass(colorCode){
 
 
 function CreatePreviewImage(data) {
+    /*
+    data use format: 
+    <CreatePreviewImage data={ 
+        obj.name,
+        obj.secondLine,
+        obj.colorCode,
+        obj.thirdLine(if exist)
+    } />
+    */
+
     //console.log(data); //correct injection would be e.g. data.data.colorCode
     let tagType = colorCodeToClass(data.data.colorCode);
     //console.log(tagType.img);
@@ -100,8 +110,8 @@ function CreatePreviewImage(data) {
 
     //return page with compiled data
     return (
-    <Col xs={12} md={6} lg={4} className="mb-2">
-        <Container className="start-tag">
+    <Col xs={12} md={6} lg={4} className="px-0">
+        <Container>
             <Row className={ tagType.bg }>
                 <Col xs="auto" className={ tagType.img }>
                 </Col>

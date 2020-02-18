@@ -10,7 +10,7 @@
 #new-tag-title{
     font-size: 26px;
 }
-li:nth-child(odd){
+.status-row:nth-child(even){
     background-color: #eee;
 }
 .status-green{
@@ -24,6 +24,10 @@ li:nth-child(odd){
 .status-red{
     background-color: red;
     border-radius: 5px;
+}
+.status-b-col-text{
+    padding: 0px;
+    margin: 0px;
 }
 .tag-green{
     width: 270px;
