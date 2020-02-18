@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useHistory, NavLink, useParams } from "react-router-dom";
+
+//layout import
 import { 
     Container, 
     Button,
@@ -7,40 +10,64 @@ import {
     InputGroup,
     FormControl
 } from 'react-bootstrap';
-import {
-    NavLink
-} from "react-router-dom";
 import '../css/nav.css';
+
+//utility import
 import CreatePreviewImage from './CreatePreviewImage.js';
 import { textValidation } from './textValidation.js';
 import { dbUtility } from './dbUtility.js';
 
-const CreateTagPage = ({ match, location }) => {
-    //debug: this should be the colorCode in the url e.g. /create/3 so "3"
-    //console.log(match.params.id);
+
+//start page
+const CreateTagPage = () => {
     //the number it grabs in the url is actually a string, so make it int
-    let thisColorCode = parseInt(match.params.id);
+    let thisColorCode = parseInt(useParams().id);
+    
+    //debug: this should be the colorCode in the url e.g. /create/3 so "3"
+    //console.log(thisColorCode);
+
+
+    //this is to be able to load status window when tag created
+    let history = useHistory();
+    
 
     //set the submit array(same data format as multi tag) to default values
     const[ submitArray, setSubmitArray ] = useState([{
         name: "",
+        color: thisColorCode,
         secondLine: "",
         thirdLine: "",
         requestor: "",
         comments: ""
     }]);
 
-    //submit grey button text and status text
-    const[ submitGrey, setSubmitGrey ] = useState(true);
-    //for the status text, only the index of it changes, not the actual string [4] is empty string
-    const statusText = [
-        "There must be a requestor, the Name must be at least 3 characters.",
-        "There must be a requestor.",
-        "The Name on the tag must be at least 3 characters",
-        "Submitting...",
-        ""
-    ];
-    const[ statusTextIndex, setStatusTextIndex ] = useState(0);
+
+    //submit button on request
+    const submitRequest = () => {
+        //check to make sure user hasn't done in-browser html magic to bypass disabled submit button
+        //an empty or invalid request
+        if(submitGrey === false){
+            //pass, as its unlikely to change a react page variable in browser unless superuser
+
+            //change status text to loading
+            setStatusTextIndex(3);
+
+            //db new entry
+            dbUtility({
+                mode: "new_entry",
+                writeData: submitArray
+            }).then(function(statusBack){
+                //console.log(statusBack)
+                //on success, navigate to /status
+                history.push("/status");
+            });
+        }else{
+            //failed, this shouldn't happen though
+        };
+    }
+
+
+    //update the status text and disable/enable button
     const updateSubmitGrey = () => {
         //also update the submission status, e.g. you need X or Y to submit
         //if empty string or 0
@@ -66,6 +93,20 @@ const CreateTagPage = ({ match, location }) => {
         };
     };
 
+
+    //submit grey button text and status text
+    const[ submitGrey, setSubmitGrey ] = useState(true);
+    //for the status text, only the index of it changes, not the actual string [4] is empty string
+    const statusText = [
+        "There must be a requestor, the Name must be at least 3 characters.",
+        "There must be a requestor.",
+        "The Name on the tag must be at least 3 characters",
+        "Submitting...",
+        ""
+    ];
+    const[ statusTextIndex, setStatusTextIndex ] = useState(0);
+
+
     //setting layout sizes
     const xsSize = 12;
     const mdSize = 6;
@@ -78,17 +119,17 @@ const CreateTagPage = ({ match, location }) => {
                 <Col xs="auto" className="p-0">
                     <NavLink to="/">
                         <Button>
-                            BACK TO STARTING TAG TYPES
+                            BACK
                         </Button>
                     </NavLink>
                 </Col>
                 <Col xs="auto">
                     <h4 className="nav-h4-bar">
-                        CREATE A NEW TAG
+                        NEW TAG
                     </h4>
                 </Col>
                 <Col xs="auto" className="p-0">
-                    <NavLink to={"/createmultiple/" + match.params.id }>
+                    <NavLink to={"/createmultiple/" + thisColorCode }>
                         <Button>
                             NEED MULTIPLES?
                         </Button>
@@ -236,12 +277,15 @@ const CreateTagPage = ({ match, location }) => {
                     <p className="mt-2">{ statusText[statusTextIndex] }</p>
                 </Col>
                 <Col xs={xsSize} md={mdSize} lg="auto">
-                    <Button type="submit" disabled={ submitGrey }>Submit Request</Button>
+                    <Button type="submit" disabled={ submitGrey } onClick={ submitRequest }>Submit Request</Button>
                 </Col>
             </Row>
         </Container>
     );
+
+
 };
+
 
   
   export default CreateTagPage;

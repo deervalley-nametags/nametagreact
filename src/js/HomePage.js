@@ -1,7 +1,8 @@
 import React from 'react';
 import { 
     Container,
-    Row
+    Row,
+    Col
 } from 'react-bootstrap';
 import CreatePreviewImage from './CreatePreviewImage.js';
 import {
@@ -53,13 +54,17 @@ function HomePage() {
     }];
 
     return (
-        <Container className="mt-2">
+        <Container className="mt-2 justify-content-center">
             <Row className="justify-content-between">
                 {
                     startingTags.map(( mapItem, index ) => 
-                        <NavLink to={'/create/' + mapItem.colorCode} key={ index }>
-                            <CreatePreviewImage data={ mapItem } />
-                        </NavLink>
+                        <Col className="p-0 mb-1 justify-content-center start-tag-container" xs="auto" key={ index }>
+                            <div className="start-tag">
+                                <NavLink to={ '/create/' + mapItem.colorCode }>
+                                        <CreatePreviewImage data={ mapItem } />
+                                </NavLink>
+                            </div>
+                        </Col>
                     )
                 }
             </Row>

@@ -46,7 +46,7 @@ function regexDelete(string){
         return "";
     }else{
         //check an entire string for valid characters, then return only those
-        const regex = /\w|\n|\r|\t|\d|\.|\!|\,| |@|\&/g;
+        const regex = /\w|\n|\r|\t|\d|[.!,?@ ]/g;
         let found = string.match(regex);
 
         //because it returns an array of all the characters, need to compile them into

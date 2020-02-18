@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState } from 'react';
+import React, { lazy, Suspense } from 'react';
 import '../css/app.css';
 import NavPage from './NavPage.js';
 import {
@@ -11,13 +11,13 @@ import {
   Spinner
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { dbUtility } from './dbUtility.js';
 
 //lazy imports
 const HomePage = lazy( () => import('./HomePage.js'));
 const StatusPage = lazy( () => import('./StatusPage.js'));
 const AdminPage = lazy( () => import('./AdminPage.js'));
 const CreateTagPage = lazy( () => import('./CreateTagPage.js'));
+const CreateMultiTagPage = lazy( () => import('./CreateMultiTagPage.js'));
 
 //lazy load spinner
 const renderLoader = (
@@ -50,9 +50,16 @@ function App() {
               <AdminPage />
             </Suspense>
           </Route>
-          <Suspense fallback={ renderLoader }>
-            <Route path="/create/:id" component={CreateTagPage} />
-          </Suspense>
+          <Route path="/create/:id">
+            <Suspense fallback={ renderLoader }>
+              <CreateTagPage />
+            </Suspense>
+          </Route>
+          <Route path="/createmultiple/:id">
+            <Suspense fallback={ renderLoader }>
+              <CreateMultiTagPage />
+            </Suspense>
+          </Route>
         </Switch>
       </Container>
     </Router>

@@ -80,6 +80,9 @@ function StatusPage(){
         }
     }]);
 
+    //this is to show and hide a load spinner, for some reason suspense isn't working with the tags not showing up
+    const[loadSpinnerClass, setLoadSpinnerClass] = useState("show");
+
 
     //run once only on mount
     useEffect(() => {
@@ -94,6 +97,9 @@ function StatusPage(){
             //setDataRow to the value of the db read
             //a console.log here will NOT work!
             setDataRow(statusTags);
+
+            //hide manual non suspense spinner
+            setLoadSpinnerClass("hide");
         });
     },[]);
 
@@ -101,6 +107,13 @@ function StatusPage(){
     //return
     return (
         <Container>
+            <Row className={ loadSpinnerClass }>
+                <Spinner variant="danger" animation="border" role="status">
+                    <span className="sr-only">
+                        Loading...
+                    </span>
+                </Spinner>
+            </Row>
             {
                 dataRow.map((mapItem, index) => 
                     <Row className="mt-1 justify-content-between status-row" key={ index }>

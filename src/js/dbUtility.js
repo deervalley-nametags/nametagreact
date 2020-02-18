@@ -29,12 +29,12 @@ function checkAuth(){
         firebase.auth().onAuthStateChanged(function(user) {
             if(user){
                 // User is signed in.
-                console.log("Logged in as: " + user.email);
+                console.log("checkAuth() passed with user: " + user.email);
         
                 resolve(true);
             }else{
                 // No user is signed in.
-                console.log("Not currently logged in.");
+                console.log("checkAuth() failed: no credentials.");
             };
         });
 
@@ -108,7 +108,6 @@ export function dbUtility(utilityObj){
     };
     
 
-    
     //mode check
     if(utilityObj.mode === "read_all"){
         /*
@@ -142,7 +141,63 @@ export function dbUtility(utilityObj){
     }else if(utilityObj.mode === "search_for"){
         //search mode
     }else if(utilityObj.mode === "new_entry"){
-        //used for new entries
+        /*
+        used for new entries
+        data in:
+        array[{name:"",requestor:"",secondLine:"",thirdLine:"",requestor:"",comments:""},{},{},etc]
+        -
+        set return type to array before pushing
+        */
+        promiseReturn = [];
+
+        //debug: what does writeData come in as
+        //console.log(utilityObj.writeData);
+
+        //return promise
+        return new Promise((resolve, reject) => {
+            //check auth before submitting
+            checkAuth().then(function(){
+                utilityObj.writeData.forEach(function(arrayItem, index){
+                    //console.log(arrayItem);
+
+                    //lower casify and split name to an array, searching can be done easilyer
+                    let tagName = arrayItem.name;
+                    let tagRequestor = arrayItem.requestor;
+                    let prependNameArray = tagName.toLowerCase();
+                    let prependRequestorArray = tagRequestor.toLowerCase();
+            
+                    //before split, add temp var and prepend name to array, so "Jake Smith"
+                    //looks like ["jake smith","jake","smith"]
+                    let nameArray = prependNameArray.split(" ");
+                    let requestorArray = prependRequestorArray.split(" ");
+                    nameArray.unshift(prependNameArray);
+                    requestorArray.unshift(prependRequestorArray);
+                    
+                    //grab current timestamp
+                    let date = new Date();
+                    let currentTimestamp = date.getTime();
+            
+                    //make a new document in db, auto gen id
+                    namesRef.add({
+                        name: tagName,
+                        namearray: nameArray,
+                        color: arrayItem.color,
+                        titlecity: arrayItem.secondLine,
+                        thirdline: arrayItem.thirdLine,
+                        requestor: tagRequestor,
+                        requestorarray: requestorArray,
+                        comments: arrayItem.comments,
+                        daterequest: currentTimestamp,
+                        datefinished: 0
+                    }).then(function(){
+                        //debug when writing is successful
+                        //console.log("writing good");
+                        resolve(true);
+                    });
+                });
+            });
+        });
+
     }else if(utilityObj.mode === "auth"){
         //if auth is called here, just do nothing
     }else if(utilityObj.mode === "update_entry"){
