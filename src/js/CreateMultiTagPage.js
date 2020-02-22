@@ -8,20 +8,23 @@ import {
     Row,
     Col,
     InputGroup,
-    FormControl
+    FormControl,
+    DropdownButton,
+    Dropdown
 } from 'react-bootstrap';
 import '../css/nav.css';
+import '../css/datasheet.css';
+import ExampleImg from '../img/excel4.png';
 
 //utility import
 import CreatePreviewImage from './CreatePreviewImage.js';
+import ExcelTable from './ExcelTable.js';
 import { textValidation } from './textValidation.js';
 import { dbUtility } from './dbUtility.js';
-import ReactDataSheet from 'react-datasheet';
-import 'react-datasheet/lib/react-datasheet.css';
 
 
 //start page
-const CreateTagPage = () => {
+const CreateMultiTagPage = () => {
     //debug: this should be the colorCode in the url e.g. /create/3 so "3"
     //console.log(match.params.id);
     //the number it grabs in the url is actually a string, so make it int
@@ -107,6 +110,13 @@ const CreateTagPage = () => {
     const[ statusTextIndex, setStatusTextIndex ] = useState(0);
 
 
+    //excel spreadsheet stuff
+    const[tableData, setTableData] = useState([
+        { name: 1, secondLine: 2, thirdLine: 3 },
+        { name: "a", secondLine: "b", thirdLine: "c" }
+    ]);
+
+
     //setting layout sizes
     const xsSize = 12;
     const mdSize = 6;
@@ -155,19 +165,23 @@ const CreateTagPage = () => {
                     />
                 </InputGroup>
             </Row>
-            <Row>
-                <Col xs={ xsSize } lg={ 6 }>
-                    <Row className="mt-3">
-                        <Button>
-                            See an Example
+            <Row className="mt-3 justify-content-between">
+                <Col xs={ xsSize } lg={ 3 }>
+                    <Row>
+                        <DropdownButton className="multi-left-button" title="See Example">
+                            <Dropdown.Item className="multi-left-button">
+                                <img src={ExampleImg} alt="example of how to paste from excel" />
+                            </Dropdown.Item>
+                        </DropdownButton>
+                    </Row>
+                    <Row className="mt-3 justify-content-between">
+                        <Button className="multi-left-button">
+                            Add 20 Rows
                         </Button>
                     </Row>
-                    <Row>
-                        
-                    </Row>
                 </Col>
-                <Col xs={ xsSize } lg={ 6 }>
-                    <InputGroup className="mt-3">
+                <Col xs={ xsSize } lg={ 9 } className="px-0">
+                    <InputGroup id="comment-box">
                         <FormControl
                             as="textarea"
                             placeholder="Comments"
@@ -192,6 +206,9 @@ const CreateTagPage = () => {
 
                 
             </Row>
+            <Row className="mt-3">
+                <ExcelTable data={ tableData } setData={ setTableData } />
+            </Row>
             <Row className="mt-3 justify-content-end">
                 <Col xs={xsSize} md={mdSize} lg="auto">
                     <p className="mt-2">{ statusText[statusTextIndex] }</p>
@@ -205,4 +222,4 @@ const CreateTagPage = () => {
 };
 
   
-  export default CreateTagPage;
+  export default CreateMultiTagPage;

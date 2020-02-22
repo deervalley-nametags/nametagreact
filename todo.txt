@@ -1,9 +1,5 @@
-onclicks:
-admin button + login
+admin auth, page
 
-
-create tag start-tag fix
+multi tag excel using react datasheet
 
 tag name input css long name no wrap
-
-unfinished tags nav bar smaller screens padding

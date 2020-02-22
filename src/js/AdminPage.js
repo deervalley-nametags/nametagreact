@@ -3,7 +3,9 @@ import {
     Container, 
     Button,
     Row,
-    Col
+    Col,
+    FormControl
+
 } from 'react-bootstrap';
 import {
     NavLink
@@ -33,6 +35,9 @@ function AdminPage() {
                         </Button>
                     </NavLink>
                 </Col>
+            </Row>
+            <Row>
+                
             </Row>
         </Container>
     );

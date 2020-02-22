@@ -1,0 +1,24 @@
+td{
+    width: 33%;
+    height: 25px !important;
+    border: 1px solid #ccc;
+    cursor: cell;
+    padding-left: 4px;
+}
+tr,.data-grid-container,.data-grid{
+    width: 100%;
+}
+table{
+    width: 100%;
+}
+
+#comment-box{
+    height: 95px;
+}
+.multi-left-button,.dropdown-toggle{
+    width: 100%;
+    margin-right: 20px;
+}
+.dropdown-item{
+    padding: 0px;
+}
