@@ -16,7 +16,7 @@ function HomePage() {
         name: "Name",
         secondLine: "Title"
     },{
-        colorCode: 7,
+        colorCode: 1,
         name: "Name",
         secondLine: "City, ST"
     },{
@@ -24,7 +24,7 @@ function HomePage() {
         name: "Name",
         secondLine: "Title"
     },{
-        colorCode: 8,
+        colorCode: 2,
         name: "Name",
         secondLine: "City, ST"
     },{
@@ -32,7 +32,7 @@ function HomePage() {
         name: "Name",
         secondLine: "Title"
     },{
-        colorCode: 9,
+        colorCode: 3,
         name: "Name",
         secondLine: "City, ST"
     },{
@@ -40,7 +40,7 @@ function HomePage() {
         name: "Name",
         secondLine: "Title"
     },{
-        colorCode: 10,
+        colorCode: 4,
         name: "Name",
         secondLine: "City, ST"
     },{

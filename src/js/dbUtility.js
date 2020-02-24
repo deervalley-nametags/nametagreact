@@ -7,19 +7,25 @@ let namesRef; //db reference
 let promiseReturn;
 
 function loginAs(user, pass){
-    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE)
-    .then(function() {
-        //persistence types:
-        //.NONE = reload will not keep session
-        //.SESSION = reload will keep session, but closing and reopening will not
-        
-        return firebase.auth().signInWithEmailAndPassword(user, pass);
-    })
-    .catch(function(error) {
-        // Handle Errors here.
-        var errorCode = error.code;
-        var errorMessage = error.message;
-        console.log(errorCode + " " + errorMessage);
+    return new Promise((resolve, reject) => {
+        firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE)
+        .then(function() {
+            //persistence types:
+            //.NONE = reload will not keep session
+            //.SESSION = reload will keep session, but closing and reopening will not
+            
+            return firebase.auth().signInWithEmailAndPassword(user, pass);
+        })
+        .then(function(){
+            resolve(true);
+
+        })
+        .catch(function(error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            console.log(errorCode + " " + errorMessage);
+        });
     });
 };
 
@@ -31,7 +37,7 @@ function checkAuth(){
                 // User is signed in.
                 console.log("checkAuth() passed with user: " + user.email);
         
-                resolve(true);
+                resolve(user.email);
             }else{
                 // No user is signed in.
                 console.log("checkAuth() failed: no credentials.");
@@ -104,7 +110,20 @@ export function dbUtility(utilityObj){
 
     //authenticate
     if(utilityObj.mode === "auth"){
-        loginAs(utilityObj.authUser, utilityObj.authPass);
+        return new Promise((resolve, reject) => {
+            //first login, must wait so it is a promise
+            loginAs(utilityObj.authUser, utilityObj.authPass).then( () => {
+                //now we need to use check auth in order to grab the user
+                checkAuth().then( returned => {
+                    //only if user is admin, resolve
+                    //console.log("pio " + returned);
+                    if(returned === "emeqiss@deervalley.com"){
+                        resolve(true);
+                    };
+
+                });
+            });
+        });
     };
     
 

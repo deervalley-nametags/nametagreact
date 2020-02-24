@@ -3,3 +3,5 @@ admin auth, page
 multi tag excel using react datasheet
 
 tag name input css long name no wrap
+
+cache (use memo?) on status

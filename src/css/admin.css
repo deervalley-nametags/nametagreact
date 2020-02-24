@@ -1,0 +1,15 @@
+.grey-text{
+    color: #444;
+}
+.align-right{
+    text-align: end;
+}
+#submit-admin{
+    width: 100%;
+}
+.admin-table{
+    border: 1px solid black;
+}
+.admin-todo-item:nth-child(even){
+    background-color: #eee;
+}
