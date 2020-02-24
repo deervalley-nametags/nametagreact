@@ -16,6 +16,26 @@ import { dbUtility } from './dbUtility.js';
 import CreatePreviewImage from './CreatePreviewImage.js';
 
 
+function copyToClipboard(id){
+    //this will copy to clipboard the id e.g. "#admin-table-1"
+
+    //convert to vanilla querySelector node
+    let node = document.querySelector(id);
+
+    //do range stuff, select
+    let range  =  document.createRange();
+    range.selectNodeContents(node);
+    let select =  window.getSelection();
+    select.removeAllRanges();
+    select.addRange(range);
+
+    //finally copy
+    document.execCommand('copy');
+
+    //add unselect here if wanted, but it helps to keep it selected
+}
+
+
 function AdminPage() {
     //admin title label
     const[adminLabel, setAdminLabel] = useState("ADMIN LOGIN");
@@ -40,6 +60,9 @@ function AdminPage() {
 
     //admin function show/hide, true/false
     const[adminDisplay, setAdminDisplay] = useState(false);
+
+    //which "copied to clipboard" index should it be displayed on
+    const[copiedClipboardIndex, setCopiedClipboardIndex] = useState(-1);
 
     //this is used to focus on the input
     const inputRef = useRef(null);
@@ -222,13 +245,20 @@ function AdminPage() {
             { 
                 //debug: change this to adminDisplay
                 !adminDisplay &&
-                <Container className="mt-2 px-1">
+                <Container className="mt-2 mb-5 px-1">
                     <Row>
                         <h5 className="grey-text">The Following Tags Need to be Completed:</h5>
                     </Row>
                     {
                         adminTodoTableData.map((mapItem, index) => 
-                            <Row className="admin-todo-item mt-2 py-3" key={ index }>
+                            <Row className="admin-todo-item mt-2 py-3" key={ index } onClick={ () => {
+                                //console.log(index);
+                                //on click, grab index and change copiedClipboardIndex
+                                setCopiedClipboardIndex(index);
+
+                                //copy clipboard with id, e.g. table-data-0 for index 0
+                                copyToClipboard("#table-data-" + index);
+                            }}>
                                 <Col xs={ 12 } lg={ 4 } className="px-0">
                                     <Row>
                                         <Col>
@@ -238,14 +268,18 @@ function AdminPage() {
                                             }} />
                                         </Col>
                                     </Row>
-                                    <Row>
-                                        <Col className="ml-2">
-                                            abc
-                                        </Col>
-                                    </Row>
+                                    {
+                                        (copiedClipboardIndex === index ? true : false) &&
+                                        <Row>
+                                            <Col className="ml-2 red-text">
+                                                Copied to Clipboard!
+                                            </Col>
+                                        </Row>
+
+                                    }
                                 </Col>
                                 <Col xs={ 12 } lg={ 8 } className="px-0">
-                                    <table className="admin-table">
+                                    <table className="admin-table" id={ "table-data-" + index }>
                                             {
                                                 mapItem.data.map((mapItem, index) => 
                                             <tbody key={ mapItem.id }>
