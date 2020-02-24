@@ -7,9 +7,19 @@
 #submit-admin{
     width: 100%;
 }
-.admin-table{
+.admin-table-td{
     border: 1px solid black;
+    width: 200px;
+}
+.admin-todo-item{
+    border: 1px solid white;
+    border-radius: 10px;
 }
 .admin-todo-item:nth-child(even){
     background-color: #eee;
+}
+.admin-todo-item:hover{
+    cursor: pointer;
+    background-color: #ddd;
+    border: 1px solid red;
 }

@@ -33,37 +33,10 @@ function AdminPage() {
     }]);
     
     //rearrange rowData into dataByColor so we know what to show, and what to push where
-    const[dataByColor, setDataByColor] = useState([]);
-
-    //construct the admin table using data
-    const adminTableTemplate = [{
-        colorCode: 1,
-        name: "2 LINE"
-    },{
-        colorCode: 2,
-        name: "2 LINE"
-    },{
-        colorCode: 2,
-        name: "3 LINE"
-    },{
-        colorCode: 3,
-        name: "2 LINE"
-    },{
-        colorCode: 3,
-        name: "3 LINE"
-    },{
-        colorCode: 4,
-        name: "2 LINE"
-    },{
-        colorCode: 4,
-        name: "3 LINE"
-    },{
-        colorCode: 5,
-        name: "SIGNS"
-    },{
-        colorCode: 11,
-        name: "BASKET/SKI CHECK"
-    }];
+    //for some reason, using useState here screws the pooch, so do all the data processing in dataByColor,
+    //then at the very end update adminTodoTableData
+    let dataByColor = [];
+    const[adminTodoTableData, setAdminTodoTableData] = useState([]);
 
     //admin function show/hide, true/false
     const[adminDisplay, setAdminDisplay] = useState(false);
@@ -126,7 +99,7 @@ function AdminPage() {
         /*
         dataByColor format:
         [{
-            colorCode: x,
+            adminTodoCode: x,
             name: "2 LINE",
             data: [{
                 id: "zBcs54S",
@@ -139,9 +112,10 @@ function AdminPage() {
         */
         dataRow.forEach((item, index) => {
             //console.log(item);
+            //item is straight from the db, e.g. item.id, or item.data.comments
             //adminTodoCode has the data format as a string: "<colorCode>-<number of lines>"
             let adminTodoCode;
-
+            
             //check if 2 or 3 line, create the item's adminTodoCode
             if(item.data.thirdline === ""){
                 //empty string means 2 line
@@ -150,54 +124,47 @@ function AdminPage() {
                 //anything else means 3 line
                 adminTodoCode = item.data.color + "-3";
             }
-
+            //console.log(adminTodoCode);
+            
             //check to see if the colorCode exists yet in dataByColor
-            let adminTodoCodeExists = dataByColor.filter(obj => obj.adminTodoCode === adminTodoCode);
-            //console.log(adminTodoCodeExists[0]);
-            if(typeof adminTodoCodeExists[0] == "undefined"){
+            let adminTodoCodeIndex = dataByColor.findIndex(obj => obj.adminTodoCode === adminTodoCode);
+            //console.log(adminTodoCodeIndex);
+            
+            if(adminTodoCodeIndex === -1){
                 //did not find prior existing, so add it
 
                 //if empty string, continue, who knows why it comes back with an empty string
                 if(item.data.color === ""){
                     return;
                 }
-
-                //set oldValue to old value, push new, then set
-                let oldValue = dataByColor;
-                oldValue.push({
+                
+                dataByColor.push({
                     adminTodoCode: adminTodoCode,
                     data: []
                 });
-                
-                setDataByColor(oldValue);
+
             }
-            
-            //debug: what does dataByColor look like when its only adding NEW types of adminTodoCodes
-            //console.log(dataByColor);
-
             //grab the index which has the admin todo code we need to modify
-            let adminTodoCodeIndex = dataByColor.findIndex(obj => obj.adminTodoCode === adminTodoCode);
-
-            //set oldValue to what dataByColor used to be
-            let oldValue = dataByColor;
+            adminTodoCodeIndex = dataByColor.findIndex(obj => obj.adminTodoCode === adminTodoCode);
             
-            //valueToAdd needs to grab the 
-            let valueToAdd = dataByColor[adminTodoCodeIndex];
-            valueToAdd.data = [];
-            
-            
-            valueToAdd.data.push({
+            //grab the index, go to data array, then push new item into it
+            dataByColor[adminTodoCodeIndex].data.push({
                 id: item.id,
-                name: item.data.name
+                name: item.data.name,
+                secondLine: item.data.titlecity,
+                thirdLine: item.data.thirdline,
+                comments: item.data.comments
             });
             
-            console.log(oldValue);
-            setDataByColor(oldValue);
 
         });
 
-        //console.log(dataByColor);
+        console.log(dataByColor);
+
+        //after all of that, set adminTodoTableData to reflect the changes
+        setAdminTodoTableData(dataByColor);
     },[dataRow]);
+
 
     //return
     return (
@@ -260,24 +227,41 @@ function AdminPage() {
                         <h5 className="grey-text">The Following Tags Need to be Completed:</h5>
                     </Row>
                     {
-                        adminTableTemplate.map((mapItem, index) => 
-                            <Row className="admin-todo-item mt-2" key={ index }>
-                                <Col xs={ 12 } lg={ 4 }>
-                                    <CreatePreviewImage data={{ 
-                                        colorCode: mapItem.colorCode,
-                                        name: mapItem.name
-                                    }} />
+                        adminTodoTableData.map((mapItem, index) => 
+                            <Row className="admin-todo-item mt-2 py-3" key={ index }>
+                                <Col xs={ 12 } lg={ 4 } className="px-0">
+                                    <Row>
+                                        <Col>
+                                            <CreatePreviewImage data={{ 
+                                                colorCode: parseInt(mapItem.adminTodoCode[0]),
+                                                name: parseInt(mapItem.adminTodoCode[2]) === 2 ? "2 LINE" : "3 LINE"
+                                            }} />
+                                        </Col>
+                                    </Row>
+                                    <Row>
+                                        <Col className="ml-2">
+                                            abc
+                                        </Col>
+                                    </Row>
                                 </Col>
-                                <Col xs={ 12 } lg={ 2 }>
-                                    Copied to Clipboard!
-                                </Col>
-                                <Col xs={ 12 } lg={ 6 }>
+                                <Col xs={ 12 } lg={ 8 } className="px-0">
                                     <table className="admin-table">
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                            </tr>
+                                            {
+                                                mapItem.data.map((mapItem, index) => 
+                                            <tbody key={ mapItem.id }>
+                                                    <tr>
+                                                        <td className="admin-table-td">{ mapItem.name }</td>
+                                                        <td className="admin-table-td">{ mapItem.secondLine }</td>
+                                                        <td className="admin-table-td">{ mapItem.thirdLine }</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td className="admin-table-td">{ mapItem.name }</td>
+                                                        <td className="admin-table-td">{ mapItem.secondLine }</td>
+                                                        <td className="admin-table-td">{ mapItem.thirdLine }</td>
+                                                    </tr>
                                         </tbody>
+                                                )
+                                            }
                                     </table>
                                 </Col>
                             </Row>
