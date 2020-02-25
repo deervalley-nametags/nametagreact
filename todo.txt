@@ -1,7 +1,8 @@
-admin auth, page
+admin page update on DONE checkmark
 
 multi tag excel using react datasheet
 
 tag name input css long name no wrap
 
 cache (use memo?) on status
+status page all tags finished if none

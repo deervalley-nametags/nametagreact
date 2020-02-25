@@ -5,7 +5,8 @@ import {
     Row,
     Col,
     FormControl,
-    InputGroup
+    InputGroup,
+    Spinner
 } from 'react-bootstrap';
 import {
     NavLink
@@ -39,6 +40,9 @@ function copyToClipboard(id){
 function AdminPage() {
     //admin title label
     const[adminLabel, setAdminLabel] = useState("ADMIN LOGIN");
+
+    //show or hide an 'all tags are done good job' tag
+    const[goodJobTag, setGoodJobTag] = useState(false);
 
     //tag rows of data, these MUST be filled with the data type or else it will freak out
     const[dataRow, setDataRow] = useState([{
@@ -178,11 +182,15 @@ function AdminPage() {
                 thirdLine: item.data.thirdline,
                 comments: item.data.comments
             });
-            
-
         });
 
         console.log(dataByColor);
+
+        //check to see if there are no tags still
+        if(dataRow.length === 0){
+            //update good job tag
+            setGoodJobTag(true);
+        }
 
         //after all of that, set adminTodoTableData to reflect the changes
         setAdminTodoTableData(dataByColor);
@@ -243,12 +251,26 @@ function AdminPage() {
                 </Row>
             }
             { 
-                //debug: change this to adminDisplay
+                //debug: change this to adminDisplay (true) not (false)
                 !adminDisplay &&
                 <Container className="mt-2 mb-5 px-1">
                     <Row>
                         <h5 className="grey-text">The Following Tags Need to be Completed:</h5>
                     </Row>
+                    {
+                        (adminTodoTableData.length === 0 && !goodJobTag) &&
+                        <Spinner variant="danger" animation="border" role="status">
+                            <span className="sr-only">
+                                Loading...
+                            </span>
+                        </Spinner>
+                    }
+                    {
+                        goodJobTag &&
+                        <Row>
+                            <p className="green-text">All tags are completed. Good job, you!</p>
+                        </Row>
+                    }
                     {
                         adminTodoTableData.map((mapItem, index) => 
                             <Row className="admin-todo-item mt-2 py-3" key={ index } onClick={ () => {
@@ -271,11 +293,46 @@ function AdminPage() {
                                     {
                                         (copiedClipboardIndex === index ? true : false) &&
                                         <Row>
-                                            <Col className="ml-2 red-text">
+                                            <Col md={ 5 } className="ml-2 red-text">
                                                 Copied to Clipboard!
                                             </Col>
-                                        </Row>
+                                            <Col md={ 5 } className="text-center">
+                                                <p className="my-0">MARK THESE AS DONE:</p>
+                                                <Button onClick={ () => {
+                                                    //debug: what index of dataByColor was clicked?
+                                                    //console.log(index);
 
+                                                    //need to remap data from adminTodoTableData[index].data{ id: "" }
+                                                    //to ["id","id","id"]
+                                                    let reformattedData = [];
+                                                    //console.log(adminTodoTableData[index].data);
+                                                    adminTodoTableData[index].data.forEach((item) => {
+                                                        reformattedData.push(item.id);
+                                                    });
+                                                    //console.log(reformattedData);
+                                                    //send to dbUtility
+                                                    dbUtility({
+                                                        mode: "update_entry",
+                                                        type: "done",
+                                                        docIdArray: reformattedData
+                                                    }).then(() => {
+                                                        //here we need to re-set the dataRow
+                                                        //grab all the unfinished tags using dbUtility promise
+                                                        dbUtility({
+                                                            mode: "read_all"
+                                                        })
+                                                        .then((statusTags) => {
+                                                            //debug: this is what the promise resolved from in dbUtility()
+                                                            //console.log(statusTags);
+
+                                                            //setDataRow to the value of the db read
+                                                            //a console.log here will NOT work!
+                                                            setDataRow(statusTags);
+                                                        });
+                                                    });
+                                                }}>&#10004;</Button>
+                                            </Col>
+                                        </Row>
                                     }
                                 </Col>
                                 <Col xs={ 12 } lg={ 8 } className="px-0">
@@ -286,12 +343,18 @@ function AdminPage() {
                                                     <tr>
                                                         <td className="admin-table-td">{ mapItem.name }</td>
                                                         <td className="admin-table-td">{ mapItem.secondLine }</td>
-                                                        <td className="admin-table-td">{ mapItem.thirdLine }</td>
+                                                        {
+                                                            !(mapItem.thirdLine === "") &&
+                                                            <td className="admin-table-td">{ mapItem.thirdLine }</td>
+                                                        }
                                                     </tr>
                                                     <tr>
                                                         <td className="admin-table-td">{ mapItem.name }</td>
                                                         <td className="admin-table-td">{ mapItem.secondLine }</td>
-                                                        <td className="admin-table-td">{ mapItem.thirdLine }</td>
+                                                        {
+                                                            !(mapItem.thirdLine === "") &&
+                                                            <td className="admin-table-td">{ mapItem.thirdLine }</td>
+                                                        }
                                                     </tr>
                                         </tbody>
                                                 )

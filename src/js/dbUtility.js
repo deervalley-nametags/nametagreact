@@ -64,7 +64,7 @@ export function dbUtility(utilityObj){
     }
     {
         mode: "new_entry",
-        writeData: submitArray[{name:,requestor:,etc},{},//etc]
+        writeData: [{name:,requestor:,etc},{},//etc]
     }
     {
         mode: "search_for", //returns array full of found tags
@@ -75,8 +75,8 @@ export function dbUtility(utilityObj){
     }
     {
         mode: "update_entry",
-        docId: "",
-        dateFinished: 00000000
+        type: "done" or "notdone"
+        docIdArray: ["id","id","id",//etc]
     }
     */
    
@@ -218,9 +218,47 @@ export function dbUtility(utilityObj){
         });
 
     }else if(utilityObj.mode === "auth"){
-        //if auth is called here, just do nothing
+        //if auth is called here, just do nothing, as there is a section above that handles it,
+        //but if this was empty it would throw some form of error
     }else if(utilityObj.mode === "update_entry"){
-        //update entry, mainly used to update if admin finished or unfinished a tag
+        //return promise
+        return new Promise((resolve, reject) => {
+
+            //update entry, mainly used to update if admin finished or unfinished a tag
+            let currentTimestamp;
+
+            //handle types
+            if(utilityObj.type === "done"){
+                //update to done
+                //grab current timestamp
+                let date = new Date();
+                currentTimestamp = date.getTime();
+
+            }else if(utilityObj.type === "notdone"){
+                //update to not done, aka undo
+                currentTimestamp = 0;
+            }else{
+                //mode not supported
+            }
+
+            //now update db for each
+            utilityObj.docIdArray.forEach((item, index) => {
+                //debug: does item come out as the doc Id?
+                //console.log(item);
+                
+                namesRef.doc(item).set({
+                    datefinished: currentTimestamp
+                })
+                .then(function() {
+                    console.log("Document successfully written on update_entry()!");
+                    resolve(true);
+                })
+                .catch(function(error) {
+                    console.error("Error writing document on update_entry(): ", error);
+                });
+
+            });
+        });
     }else{
         //something else encountered
         console.log("dbUtility() was called using a non supported utilityObj mode.");
