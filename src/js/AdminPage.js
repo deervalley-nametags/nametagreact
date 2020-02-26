@@ -1,4 +1,8 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { 
+    useState, 
+    useRef, 
+    useEffect
+} from 'react';
 import { 
     Container, 
     Button,
@@ -15,6 +19,7 @@ import '../css/nav.css';
 import '../css/admin.css';
 import { dbUtility } from './dbUtility.js';
 import CreatePreviewImage from './CreatePreviewImage.js';
+import StatusPage from './StatusPage.js';
 
 
 function copyToClipboard(id){
@@ -45,21 +50,22 @@ function AdminPage() {
     const[goodJobTag, setGoodJobTag] = useState(false);
 
     //tag rows of data, these MUST be filled with the data type or else it will freak out
-    const[dataRow, setDataRow] = useState([{
+    const[dataRowAdmin, setDataRowAdmin] = useState([{
         id: 0,
         data: {
             color: "",
             comments: "",
+            requestor: "",
             datefinished: 0,
             daterequest: 0,
             reqDaysAgo: 0
         }
     }]);
+
     
     //rearrange rowData into dataByColor so we know what to show, and what to push where
     //for some reason, using useState here screws the pooch, so do all the data processing in dataByColor,
     //then at the very end update adminTodoTableData
-    let dataByColor = [];
     const[adminTodoTableData, setAdminTodoTableData] = useState([]);
 
     //admin function show/hide, true/false
@@ -73,7 +79,7 @@ function AdminPage() {
 
     //pass value
     const[adminPassValue, setAdminPassValue] = useState("");
-    
+
 
     //on enter or submit, try to auth
     const tryLogin = (event) => {
@@ -114,13 +120,13 @@ function AdminPage() {
             //debug: this is what the promise resolved from in dbUtility()
             //console.log(statusTags);
 
-            //setDataRow to the value of the db read
+            //setDataRowAdmin to the value of the db read
             //a console.log here will NOT work!
-            setDataRow(statusTags);
+            setDataRowAdmin(statusTags);
         });
     }, []);
 
-    //when dataRow updates
+    //when dataRowAdmin updates
     //rearrange it by color
     useEffect(() => {
         /*
@@ -137,7 +143,9 @@ function AdminPage() {
             },{},{},etc]
         },{},{},etc]
         */
-        dataRow.forEach((item, index) => {
+        let dataByColor = [];
+       
+        dataRowAdmin.forEach((item, index) => {
             //console.log(item);
             //item is straight from the db, e.g. item.id, or item.data.comments
             //adminTodoCode has the data format as a string: "<colorCode>-<number of lines>"
@@ -180,21 +188,22 @@ function AdminPage() {
                 name: item.data.name,
                 secondLine: item.data.titlecity,
                 thirdLine: item.data.thirdline,
-                comments: item.data.comments
+                comments: item.data.comments,
+                requestor: item.data.requestor
             });
         });
 
-        console.log(dataByColor);
+        //console.log(dataByColor);
 
         //check to see if there are no tags still
-        if(dataRow.length === 0){
+        if(dataRowAdmin.length === 0){
             //update good job tag
             setGoodJobTag(true);
         }
 
         //after all of that, set adminTodoTableData to reflect the changes
         setAdminTodoTableData(dataByColor);
-    },[dataRow]);
+    },[dataRowAdmin]);
 
 
     //return
@@ -254,7 +263,7 @@ function AdminPage() {
                 //debug: change this to adminDisplay (true) not (false)
                 !adminDisplay &&
                 <Container className="mt-2 mb-5 px-1">
-                    <Row>
+                    <Row className="justify-content-center">
                         <h5 className="grey-text">The Following Tags Need to be Completed:</h5>
                     </Row>
                     {
@@ -267,7 +276,7 @@ function AdminPage() {
                     }
                     {
                         goodJobTag &&
-                        <Row>
+                        <Row className="justify-content-center">
                             <p className="green-text">All tags are completed. Good job, you!</p>
                         </Row>
                     }
@@ -316,7 +325,7 @@ function AdminPage() {
                                                         type: "done",
                                                         docIdArray: reformattedData
                                                     }).then(() => {
-                                                        //here we need to re-set the dataRow
+                                                        //here we need to re-set the dataRowAdmin
                                                         //grab all the unfinished tags using dbUtility promise
                                                         dbUtility({
                                                             mode: "read_all"
@@ -325,9 +334,9 @@ function AdminPage() {
                                                             //debug: this is what the promise resolved from in dbUtility()
                                                             //console.log(statusTags);
 
-                                                            //setDataRow to the value of the db read
+                                                            //setDataRowAdmin to the value of the db read
                                                             //a console.log here will NOT work!
-                                                            setDataRow(statusTags);
+                                                            setDataRowAdmin(statusTags);
                                                         });
                                                     });
                                                 }}>&#10004;</Button>
@@ -335,11 +344,11 @@ function AdminPage() {
                                         </Row>
                                     }
                                 </Col>
-                                <Col xs={ 12 } lg={ 8 } className="px-0">
+                                <Col xs={ 6 } lg={ 4 } className="px-0">
                                     <table className="admin-table" id={ "table-data-" + index }>
-                                            {
-                                                mapItem.data.map((mapItem, index) => 
-                                            <tbody key={ mapItem.id }>
+                                        {
+                                            mapItem.data.map((mapItem, index) => 
+                                                <tbody key={ mapItem.id }>
                                                     <tr>
                                                         <td className="admin-table-td">{ mapItem.name }</td>
                                                         <td className="admin-table-td">{ mapItem.secondLine }</td>
@@ -356,14 +365,29 @@ function AdminPage() {
                                                             <td className="admin-table-td">{ mapItem.thirdLine }</td>
                                                         }
                                                     </tr>
-                                        </tbody>
-                                                )
-                                            }
+                                                </tbody>
+                                            )
+                                        }
+                                    </table >
+                                </Col>
+                                <Col xs={ 6 } lg={ 4 } className="pr-0">
+                                    <table className="admin-table">
+                                        {
+                                            mapItem.data.map((mapItem, index) => 
+                                                <tbody key={ mapItem.id }>
+                                                    <tr>
+                                                        <td className="admin-table-td-double">{ "Requestor: " + mapItem.requestor }</td>
+                                                        <td className="admin-table-td-double">{ "Comments: " + mapItem.comments }</td>
+                                                    </tr>
+                                                </tbody>
+                                            )
+                                        }
                                     </table>
                                 </Col>
                             </Row>
                         )
                     }
+                    <StatusPage adminMode={ true } />
                 </Container>
             }
         </Container>

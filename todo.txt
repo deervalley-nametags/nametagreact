@@ -1,8 +1,9 @@
 admin page update on DONE checkmark
+admin to stay logged in session(optional)
+admin page outdoor tag no duplicate, print button
 
 multi tag excel using react datasheet
 
 tag name input css long name no wrap
 
 cache (use memo?) on status
-status page all tags finished if none

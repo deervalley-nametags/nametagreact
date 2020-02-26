@@ -2,7 +2,8 @@ import React from 'react';
 import { 
     Container,
     Row,
-    Col
+    Col,
+    Button
 } from 'react-bootstrap';
 import CreatePreviewImage from './CreatePreviewImage.js';
 import {
@@ -54,8 +55,22 @@ function HomePage() {
     }];
 
     return (
-        <Container className="mt-2 justify-content-center">
-            <Row className="justify-content-between">
+        <Container className="mt-1 justify-content-center">
+            <Row className="justify-content-center nav-h4-bar-bg">
+                <Col xs="auto">
+                    <h4 className="nav-h4-bar">
+                        CLICK TAG TYPE TO GET STARTED or GOTO
+                    </h4>
+                </Col>
+                <Col xs="auto">
+                    <NavLink to="/status">
+                        <Button>
+                            ORDER STATUS
+                        </Button>
+                    </NavLink>
+                </Col>
+            </Row>
+            <Row className="justify-content-between mt-3">
                 {
                     startingTags.map(( mapItem, index ) => 
                         <Col className="p-0 mb-1 justify-content-center start-tag-container" xs="auto" key={ index }>

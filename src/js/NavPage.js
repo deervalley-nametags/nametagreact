@@ -6,8 +6,6 @@ import {
     Route,
     NavLink
   } from "react-router-dom";
-import GotoStatusPage from './GotoStatusPage.js';
-import GotoHomePage from './GotoHomePage.js';
 
 function NavPage() {
     return (
@@ -22,14 +20,6 @@ function NavPage() {
                     </Button>
                 </NavLink>
             </Navbar>
-                <Switch>
-                    <Route exact path="/">
-                        <GotoStatusPage />
-                    </Route>
-                    <Route path="/status">
-                        <GotoHomePage />
-                    </Route>
-                </Switch>
         </Container>
     );
   }

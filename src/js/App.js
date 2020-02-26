@@ -42,7 +42,7 @@ function App() {
           </Route>
           <Route path="/status">
             <Suspense fallback={ renderLoader }>
-              <StatusPage />
+              <StatusPage adminMode={ false } />
             </Suspense>
           </Route>
           <Route path="/admin">

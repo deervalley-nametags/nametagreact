@@ -145,10 +145,19 @@ export function dbUtility(utilityObj){
                 namesRef.where("datefinished", "==", 0).get().then(function(querySnapshot){
                     querySnapshot.forEach(function(doc){
                         //for each document found as unfinished, array push the following
-                        promiseReturn.push({
-                            id: doc.id,
-                            data: doc.data()
-                        });
+
+                        //search for any matching id's in promiseReturn
+                        let priorExistingId = promiseReturn.findIndex(obj => obj.id === doc.id);
+                        if(priorExistingId === -1){
+                            //-1 means it did not find a prior id, so go ahead
+                            //array push the following
+                            promiseReturn.push({
+                                id: doc.id,
+                                data: doc.data()
+                            });
+                        }else{
+                            //anything else means if found something prior, so do nothing
+                        }
                     });
                     resolve(promiseReturn);
                 });
@@ -159,6 +168,45 @@ export function dbUtility(utilityObj){
 
     }else if(utilityObj.mode === "search_for"){
         //search mode
+        let promiseReturn = [];
+
+        //return promise
+        return new Promise((resolve, reject) => {
+            //check auth before getting doc data
+            checkAuth().then(function(){
+                //grab results where name is being searched for
+                namesRef.where("namearray", "array-contains-any", [utilityObj.searchForString]).get().then(function(querySnapshot){
+                    querySnapshot.forEach(function(doc){
+                        //for each document found, array push the following
+                        promiseReturn.push({
+                            id: doc.id,
+                            data: doc.data()
+                        });
+                    });
+                }).then(function(){
+                    //now grab all results where requestor could be searched for, this allows duplicate results
+                    namesRef.where("requestorarray", "array-contains-any", [utilityObj.searchForString]).get().then(function(querySnapshot){
+                        querySnapshot.forEach(function(doc){
+                            //for each document found
+                            
+                            //search for any matching id's in promiseReturn
+                            let priorExistingId = promiseReturn.findIndex(obj => obj.id === doc.id);
+                            if(priorExistingId === -1){
+                                //-1 means it did not find a prior id, so go ahead
+                                //array push the following
+                                promiseReturn.push({
+                                    id: doc.id,
+                                    data: doc.data()
+                                });
+                            }else{
+                                //anything else means if found something prior, so do nothing
+                            }
+                        });
+                        resolve(promiseReturn);
+                    });
+                });
+            });
+        });
     }else if(utilityObj.mode === "new_entry"){
         /*
         used for new entries
@@ -246,7 +294,7 @@ export function dbUtility(utilityObj){
                 //debug: does item come out as the doc Id?
                 //console.log(item);
                 
-                namesRef.doc(item).set({
+                namesRef.doc(item).update({
                     datefinished: currentTimestamp
                 })
                 .then(function() {

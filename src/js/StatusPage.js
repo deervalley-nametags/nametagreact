@@ -9,11 +9,15 @@ import {
     Button,
     Row,
     Col,
-    Spinner
+    Spinner,
+    InputGroup,
+    FormControl
 } from 'react-bootstrap';
+import { NavLink } from "react-router-dom";
 import { dbUtility } from './dbUtility.js';
 import '../css/nav.css';
 import '../css/tags.css';
+import '../css/admin.css';
 
 
 //compile time data, grab the date once, needs to be here due to scope
@@ -67,7 +71,11 @@ const grabStatus = (dateFinished => {
 });
 
 
-function StatusPage(){
+function StatusPage(props){
+    //debug: props.adminMode is true or false
+    //console.log(props);
+    const isAdminMode = props.adminMode;
+
     //tag rows of data, these MUST be filled with the data type or else it will freak out
     const[dataRow, setDataRow] = useState([{
         id: 0,
@@ -81,11 +89,29 @@ function StatusPage(){
     }]);
 
     //this is to show and hide a load spinner, for some reason suspense isn't working with the tags not showing up
-    const[loadSpinnerClass, setLoadSpinnerClass] = useState("show");
+    const[showPage, setShowPage] = useState(false);
+
+    //display all tags system done tag
+    const[tagsAreDone, setTagsAreDone] = useState(false);
+
+    //search value
+    const[searchValue, setSearchValue] = useState("");
+
+    //h4 title
+    const[h4Title, setH4Title] = useState("STATUS for UNFINISHED TAGS:");
+
+    //search bar placeholder
+    const[searchBarPlaceholder, setSearchBarPlaceholder] = useState("Search Already Ordered Tags");
 
 
     //run once only on mount
     useEffect(() => {
+        //set h4 title and search bar placeholder on adminmode
+        if(isAdminMode){
+            setH4Title("Modify Tag Status");
+            setSearchBarPlaceholder("Search for Specific Tags");
+        }
+
         //grab all the unfinished tags using dbUtility promise
         dbUtility({
             mode: "read_all"
@@ -98,8 +124,13 @@ function StatusPage(){
             //a console.log here will NOT work!
             setDataRow(statusTags);
 
+            //if statusTags are empty, set the tags to show
+            if(statusTags.length === 0){
+                setTagsAreDone(true);
+            }
+
             //hide manual non suspense spinner
-            setLoadSpinnerClass("hide");
+            setShowPage(true);
         });
     },[]);
 
@@ -107,17 +138,162 @@ function StatusPage(){
     //return
     return (
         <Container>
-            <Row className={ loadSpinnerClass }>
+            <Row className="justify-content-between mt-1 nav-h4-bar-bg">
+                {
+                    !isAdminMode &&
+                    <Col xs="auto" className="p-0">
+                        <NavLink to="/">
+                            <Button>
+                                BACK
+                            </Button>
+                        </NavLink>
+                    </Col>
+                }
+                <Col xs="auto">
+                    <h4 className="nav-h4-bar">
+                        { h4Title }
+                    </h4>
+                </Col>
+                <Col xs="auto" className="p-0">
+                <InputGroup id="status-search-bar">
+                    <FormControl
+                        placeholder={ searchBarPlaceholder }
+                        aria-label="Search"
+                        aria-describedby="basic-addon1"
+                        onChange={ (e) => {
+                            //on value change set searchValue to string
+                            let thisSearchValue = e.target.value;
+
+                            //lower casify it
+                            thisSearchValue = thisSearchValue.toLowerCase();
+
+                            setSearchValue(thisSearchValue);
+                        }}
+                        onKeyPress={ (e) => {
+                            if(e.key === 'Enter'){
+                                //if enter was pressed
+                                //console.log(searchValue);
+
+                                //if search value is empty, reset
+                                if(searchValue === ""){
+                                    //set the h4 title
+                                    setH4Title("Modify Tag Status");
+
+                                    dbUtility({
+                                        mode: "read_all"
+                                    })
+                                    .then((statusTags) => {
+                                        //debug: this is what the promise resolved from in dbUtility()
+                                        //console.log(statusTags);
+                            
+                                        //setDataRow to the value of the db read
+                                        //a console.log here will NOT work!
+                                        setDataRow(statusTags);
+                            
+                                        //if statusTags are empty, set the tags to show
+                                        if(statusTags.length === 0){
+                                            setTagsAreDone(true);
+                                        }
+                            
+                                        //hide manual non suspense spinner
+                                        setShowPage(true);
+                                    });
+                                }else{
+                                    //immediately show loader spinner
+                                    setH4Title(renderLoader);
+    
+    
+                                    //search using dbUtility
+                                    dbUtility({
+                                        mode: "search_for",
+                                        searchForString: searchValue
+                                    }).then((returnResult) => {
+                                        //returnResult is an array of documents that match
+                                        setDataRow(returnResult);
+    
+                                        //set the h4 title
+                                        setH4Title("Results for: " + searchValue);
+                                    });
+                                };
+                            }
+                        }}
+                    />
+                </InputGroup>
+                </Col>
+            </Row>
+            {
+            (!showPage) &&
+            <Row>
                 <Spinner variant="danger" animation="border" role="status">
                     <span className="sr-only">
                         Loading...
                     </span>
                 </Spinner>
             </Row>
+            }
             {
+                (tagsAreDone && !isAdminMode) &&
+                <Row className="justify-content-center mt-2">
+                    <h5 className="green-text mt-2">All tags in the system are done.</h5>
+                </Row>
+            }
+            {
+                showPage &&
                 dataRow.map((mapItem, index) => 
-                    <Row className="mt-1 justify-content-between status-row" key={ index }>
-                        <Col xs={ 5 } className="px-0">
+                    <Row className="mt-1 justify-content-between status-row" key={ "status-" + mapItem.id }>
+                        {
+                            isAdminMode &&
+                            <Col xs={ 1 } className="px-0">
+                                <Row className="justify-content-center mt-1">
+                                    <Col xs="auto">
+                                        <Button 
+                                            variant="success" 
+                                            disabled={ 
+                                                grabStatus(mapItem.data.datefinished).class === "status-green" ? true : false 
+                                            }
+                                            onClick={ () => {
+                                                //update the entry with DONE
+                                                let tempIdArray = [];
+                                                tempIdArray.push(mapItem.id);
+                                                dbUtility({
+                                                    mode: "update_entry",
+                                                    type: "done",
+                                                    docIdArray: tempIdArray
+                                                });
+                                            }}>
+                                            &#10004;
+                                        </Button>
+                                    </Col>
+                                </Row>
+                                <Row className="justify-content-center mt-1">
+                                    <Col xs="auto">
+                                        <Button 
+                                            variant="warning" 
+                                            disabled={ 
+                                            grabStatus(mapItem.data.datefinished).class === "status-yellow" ? true : false 
+                                        }
+                                        onClick={ () => {
+                                            //debug: grab id of item clicked on
+                                            //console.log(mapItem.id);
+                                            let tempIdArray = [];
+                                            tempIdArray.push(mapItem.id);
+
+                                            //update the entry with UNDO / notdone
+                                            dbUtility({
+                                                mode: "update_entry",
+                                                type: "notdone",
+                                                docIdArray: tempIdArray
+                                            }).then(() => {
+                                                //somehow need to re-update
+                                            });
+                                        }}>
+                                            &#10226;
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Col>
+                        }
+                        <Col xs={ isAdminMode ? 5 : 6 } className="px-0">
                             <Suspense fallback={ renderLoader }>
                                 <CreatePreviewImage data={{ 
                                     name: mapItem.data.name,
@@ -126,7 +302,7 @@ function StatusPage(){
                                 }} />
                             </Suspense>
                         </Col>
-                        <Col xs={ 5 } className="px-0">
+                        <Col xs={ 4 } className="px-0">
                             <Row>
                                 <p className="status-b-col-text">Requestor: { mapItem.data.requestor }</p>
                             </Row>
