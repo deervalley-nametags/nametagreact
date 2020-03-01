@@ -35,3 +35,7 @@
 .green-text{
     color: green;
 }
+.admin-change-status-button:disabled{
+    background-color: #ddd;
+    border: 1px solid #bbb;
+}

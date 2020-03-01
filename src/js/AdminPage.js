@@ -94,15 +94,20 @@ function AdminPage() {
                 mode: "auth",
                 authUser: "emeqiss@deervalley.com",
                 authPass: adminPassValue
-            }).then(() => {
+            }).then( resolutionState => {
                 //debug: proper admin auth
-                //console.log("gg");
+                //console.log(resolutionState);
 
                 //switch panel views
                 setAdminDisplay(true);
 
                 //set the admin label
                 setAdminLabel("ADMIN CENTER");
+
+            }).catch( error => {
+                //catch error and set title to the error message that traces from the tryLogin at dbUtility
+                //console.log(error);
+                setAdminLabel(error.msg);
             });
         };
     };
@@ -151,13 +156,13 @@ function AdminPage() {
             //adminTodoCode has the data format as a string: "<colorCode>-<number of lines>"
             let adminTodoCode;
             
-            //check if 2 or 3 line, create the item's adminTodoCode
+            //check if 2 or 3 line, create the item's adminTodoCode 
             if(item.data.thirdline === ""){
                 //empty string means 2 line
-                adminTodoCode = item.data.color + "-2";
+                adminTodoCode = "2-" + item.data.color;
             }else{
                 //anything else means 3 line
-                adminTodoCode = item.data.color + "-3";
+                adminTodoCode = "3-" + item.data.color;
             }
             //console.log(adminTodoCode);
             
@@ -209,7 +214,7 @@ function AdminPage() {
     //return
     return (
         <Container>
-            <Row className="justify-content-between nav-h4-bar-bg">
+            <Row className="justify-content-between nav-h4-bar-bg px-0">
                 <Col xs="auto" className="p-0">
                     <NavLink to="/">
                         <Button>
@@ -232,7 +237,7 @@ function AdminPage() {
             </Row>
             {
                 !adminDisplay &&
-                <Row className="mt-2">
+                <Row className="mt-2 px-0">
                     <Col xs={ 10 } className="pl-0 pr-2">
                         <InputGroup>
                             <FormControl
@@ -261,7 +266,7 @@ function AdminPage() {
             }
             { 
                 //debug: change this to adminDisplay (true) not (false)
-                !adminDisplay &&
+                adminDisplay &&
                 <Container className="mt-2 mb-5 px-1">
                     <Row className="justify-content-center">
                         <h5 className="grey-text">The Following Tags Need to be Completed:</h5>
@@ -294,8 +299,8 @@ function AdminPage() {
                                     <Row>
                                         <Col>
                                             <CreatePreviewImage data={{ 
-                                                colorCode: parseInt(mapItem.adminTodoCode[0]),
-                                                name: parseInt(mapItem.adminTodoCode[2]) === 2 ? "2 LINE" : "3 LINE"
+                                                colorCode: parseInt(mapItem.adminTodoCode.slice(2)),
+                                                name: parseInt(mapItem.adminTodoCode[0]) === 2 ? "2 LINE" : "3 LINE"
                                             }} />
                                         </Col>
                                     </Row>
@@ -318,6 +323,7 @@ function AdminPage() {
                                                     adminTodoTableData[index].data.forEach((item) => {
                                                         reformattedData.push(item.id);
                                                     });
+
                                                     //console.log(reformattedData);
                                                     //send to dbUtility
                                                     dbUtility({
@@ -337,6 +343,9 @@ function AdminPage() {
                                                             //setDataRowAdmin to the value of the db read
                                                             //a console.log here will NOT work!
                                                             setDataRowAdmin(statusTags);
+
+                                                            //set copy clipboard index back to nothing
+                                                            setCopiedClipboardIndex(-1);
                                                         });
                                                     });
                                                 }}>&#10004;</Button>
@@ -387,7 +396,7 @@ function AdminPage() {
                             </Row>
                         )
                     }
-                    <StatusPage adminMode={ true } />
+                    <StatusPage adminMode={ true } dataRowAdmin={ dataRowAdmin } setDataRowAdmin={ setDataRowAdmin } />
                 </Container>
             }
         </Container>

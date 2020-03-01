@@ -8,6 +8,7 @@ let promiseReturn;
 
 function loginAs(user, pass){
     return new Promise((resolve, reject) => {
+        
         firebase.auth().setPersistence(firebase.auth.Auth.Persistence.NONE)
         .then(function() {
             //persistence types:
@@ -18,13 +19,17 @@ function loginAs(user, pass){
         })
         .then(function(){
             resolve(true);
-
         })
         .catch(function(error) {
             // Handle Errors here.
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            console.log(errorCode + " " + errorMessage);
+            let errorCode = error.code;
+            let errorMessage = error.message;
+            //console.log(errorCode + " -1- " + errorMessage);
+
+            reject({
+                code: errorCode,
+                msg: errorMessage
+            });
         });
     });
 };
@@ -112,16 +117,19 @@ export function dbUtility(utilityObj){
     if(utilityObj.mode === "auth"){
         return new Promise((resolve, reject) => {
             //first login, must wait so it is a promise
+            let isError = false;
+            
             loginAs(utilityObj.authUser, utilityObj.authPass).then( () => {
                 //now we need to use check auth in order to grab the user
                 checkAuth().then( returned => {
                     //only if user is admin, resolve
                     //console.log("pio " + returned);
-                    if(returned === "emeqiss@deervalley.com"){
-                        resolve(true);
-                    };
-
+                    resolve(returned);
+                }).catch( error => {
+                    
                 });
+            }).catch( error => {
+                reject(error);
             });
         });
     };

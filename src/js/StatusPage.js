@@ -71,8 +71,11 @@ const grabStatus = (dateFinished => {
 });
 
 
+
+
+
 function StatusPage(props){
-    //debug: props.adminMode is true or false
+    //debug: props.adminMode is true or false, props.dataRowAdmin would be the dataRowAdmin
     //console.log(props);
     const isAdminMode = props.adminMode;
 
@@ -97,11 +100,89 @@ function StatusPage(props){
     //search value
     const[searchValue, setSearchValue] = useState("");
 
+    //container width padding, empty for normal mode, "px-0" for admin mode
+    const[adminPadding, setAdminPadding] = useState("");
+
     //h4 title
     const[h4Title, setH4Title] = useState("STATUS for UNFINISHED TAGS:");
 
     //search bar placeholder
     const[searchBarPlaceholder, setSearchBarPlaceholder] = useState("Search Already Ordered Tags");
+
+    //function for done or undo button clicked, only on admin page
+    const tagsNeedUpdate = () => {
+        //immediately set the loader
+        setShowPage(false);
+        
+
+        //check if something was searched
+        if(searchValue === ""){
+            //empty string means no search query, so just read all mode
+
+            //read everything again
+            dbUtility({
+                mode: "read_all"
+            })
+            .then((statusTags) => {
+                //debug: this is what the promise resolved from in dbUtility()
+                //console.log(statusTags);
+
+                //setDataRow to the value of the db read
+                setDataRow(statusTags);
+                
+
+                //if statusTags are empty, set the tags to show
+                if(statusTags.length === 0){
+                    setTagsAreDone(true);
+                }
+
+                //hide manual non suspense spinner
+                setShowPage(true);
+
+                //update lift state up for admin page
+                props.setDataRowAdmin(statusTags);
+            });
+            
+        }else{
+            //anything else means search query, so search for mode
+            //console.log(searchValue);
+
+            //immediately show loader spinner
+            setH4Title(renderLoader);
+
+            //this is only for the admin page
+            dbUtility({
+                mode: "read_all"
+            })
+            .then((statusTags) => {
+                //update lift state up for admin page
+                props.setDataRowAdmin(statusTags);
+
+            })
+            .then(() => {
+
+                //this is for the status page, but only when it is on admin mode
+                dbUtility({
+                    mode: "search_for",
+                    searchForString: searchValue
+                }).then((returnResult) => {
+                    //returnResult is an array of documents that match
+                    setDataRow(returnResult);
+    
+                    
+                }).then(() => {
+                    //show result
+                    setShowPage(true);
+
+                    //immediately show loader spinner
+                    setH4Title("Results for: " + searchValue);
+                });
+            });
+
+        };
+
+        
+    };
 
 
     //run once only on mount
@@ -110,6 +191,7 @@ function StatusPage(props){
         if(isAdminMode){
             setH4Title("Modify Tag Status");
             setSearchBarPlaceholder("Search for Specific Tags");
+            setAdminPadding("px-0");
         }
 
         //grab all the unfinished tags using dbUtility promise
@@ -134,10 +216,37 @@ function StatusPage(props){
         });
     },[]);
 
+    //run when dataRowAdmin updates
+    useEffect(() => {
+        //debug: did passing state down work?
+        //console.log("456");
+
+        //now update itself to reflect changes
+        dbUtility({
+            mode: "read_all"
+        })
+        .then((statusTags) => {
+            //debug: this is what the promise resolved from in dbUtility()
+            //console.log(statusTags);
+
+            //setDataRow to the value of the db read
+            //a console.log here will NOT work!
+            setDataRow(statusTags);
+
+            //if statusTags are empty, set the tags to show
+            if(statusTags.length === 0){
+                setTagsAreDone(true);
+            }
+
+            //hide manual non suspense spinner
+            setShowPage(true);
+        });
+    },[props.dataRowAdmin]);
+
 
     //return
     return (
-        <Container>
+        <Container className={ adminPadding }>
             <Row className="justify-content-between mt-1 nav-h4-bar-bg">
                 {
                     !isAdminMode &&
@@ -248,6 +357,7 @@ function StatusPage(props){
                                     <Col xs="auto">
                                         <Button 
                                             variant="success" 
+                                            className="admin-change-status-button"
                                             disabled={ 
                                                 grabStatus(mapItem.data.datefinished).class === "status-green" ? true : false 
                                             }
@@ -259,6 +369,10 @@ function StatusPage(props){
                                                     mode: "update_entry",
                                                     type: "done",
                                                     docIdArray: tempIdArray
+                                                }).then(() => {
+                                                    //somehow need to re-update
+
+                                                    tagsNeedUpdate();
                                                 });
                                             }}>
                                             &#10004;
@@ -269,6 +383,7 @@ function StatusPage(props){
                                     <Col xs="auto">
                                         <Button 
                                             variant="warning" 
+                                            className="admin-change-status-button"
                                             disabled={ 
                                             grabStatus(mapItem.data.datefinished).class === "status-yellow" ? true : false 
                                         }
@@ -285,6 +400,7 @@ function StatusPage(props){
                                                 docIdArray: tempIdArray
                                             }).then(() => {
                                                 //somehow need to re-update
+                                                tagsNeedUpdate();
                                             });
                                         }}>
                                             &#10226;
@@ -298,6 +414,7 @@ function StatusPage(props){
                                 <CreatePreviewImage data={{ 
                                     name: mapItem.data.name,
                                     secondLine: mapItem.data.titlecity,
+                                    thirdLine: mapItem.data.thirdline,
                                     colorCode: mapItem.data.color
                                 }} />
                             </Suspense>

@@ -1,9 +1,14 @@
-admin page update on DONE checkmark
-admin to stay logged in session(optional)
 admin page outdoor tag no duplicate, print button
 
 multi tag excel using react datasheet
 
 tag name input css long name no wrap
 
+
+last:
+test ALL tag types
+
+
+optional:
 cache (use memo?) on status
+admin to stay logged in session
