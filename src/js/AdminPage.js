@@ -20,6 +20,7 @@ import '../css/admin.css';
 import { dbUtility } from './dbUtility.js';
 import CreatePreviewImage from './CreatePreviewImage.js';
 import StatusPage from './StatusPage.js';
+import PrintOutdoorTag from './PrintOutdoorTag.js';
 
 
 function copyToClipboard(id){
@@ -288,7 +289,7 @@ function AdminPage() {
                     {
                         adminTodoTableData.map((mapItem, index) => 
                             <Row className="admin-todo-item mt-2 py-3" key={ index } onClick={ () => {
-                                //console.log(index);
+                                //console.log(mapItem.adminTodoCode);
                                 //on click, grab index and change copiedClipboardIndex
                                 setCopiedClipboardIndex(index);
 
@@ -356,22 +357,38 @@ function AdminPage() {
                                 <Col xs={ 6 } lg={ 4 } className="px-0">
                                     <table className="admin-table" id={ "table-data-" + index }>
                                         {
-                                            mapItem.data.map((mapItem, index) => 
-                                                <tbody key={ mapItem.id }>
+                                            !(mapItem.adminTodoCode[2] === "4") &&
+                                            mapItem.data.map((mapItemChild, index) => 
+                                                <tbody key={ mapItemChild.id }>
                                                     <tr>
-                                                        <td className="admin-table-td">{ mapItem.name }</td>
-                                                        <td className="admin-table-td">{ mapItem.secondLine }</td>
+                                                        <td className="admin-table-td">{ mapItemChild.name }</td>
+                                                        <td className="admin-table-td">{ mapItemChild.secondLine }</td>
                                                         {
-                                                            !(mapItem.thirdLine === "") &&
-                                                            <td className="admin-table-td">{ mapItem.thirdLine }</td>
+                                                            !(mapItemChild.thirdLine === "") &&
+                                                            <td className="admin-table-td">{ mapItemChild.thirdLine }</td>
                                                         }
                                                     </tr>
                                                     <tr>
-                                                        <td className="admin-table-td">{ mapItem.name }</td>
-                                                        <td className="admin-table-td">{ mapItem.secondLine }</td>
+                                                        <td className="admin-table-td">{ mapItemChild.name }</td>
+                                                        <td className="admin-table-td">{ mapItemChild.secondLine }</td>
                                                         {
-                                                            !(mapItem.thirdLine === "") &&
-                                                            <td className="admin-table-td">{ mapItem.thirdLine }</td>
+                                                            !(mapItemChild.thirdLine === "") &&
+                                                            <td className="admin-table-td">{ mapItemChild.thirdLine }</td>
+                                                        }
+                                                    </tr>
+                                                </tbody>
+                                            )
+                                        }
+                                        {
+                                            (mapItem.adminTodoCode[2] === "4") &&
+                                            mapItem.data.map((mapItemChild, index) => 
+                                                <tbody key={ mapItemChild.id }>
+                                                    <tr>
+                                                        <td className="admin-table-td-double">{ mapItemChild.name }</td>
+                                                        <td className="admin-table-td-double">{ mapItemChild.secondLine }</td>
+                                                        {
+                                                            !(mapItemChild.thirdLine === "") &&
+                                                            <td className="admin-table-td">{ mapItemChild.thirdLine }</td>
                                                         }
                                                     </tr>
                                                 </tbody>
@@ -382,11 +399,17 @@ function AdminPage() {
                                 <Col xs={ 6 } lg={ 4 } className="pr-0">
                                     <table className="admin-table">
                                         {
-                                            mapItem.data.map((mapItem, index) => 
-                                                <tbody key={ mapItem.id }>
+                                            mapItem.data.map((mapItemChild, childIndex) => 
+                                                <tbody key={ mapItemChild.id }>
                                                     <tr>
-                                                        <td className="admin-table-td-double">{ "Requestor: " + mapItem.requestor }</td>
-                                                        <td className="admin-table-td-double">{ "Comments: " + mapItem.comments }</td>
+                                                        {
+                                                            (mapItem.adminTodoCode[2] === "4") &&
+                                                            <td className="admin-table-td-double">
+                                                                <PrintOutdoorTag props={ mapItemChild } index={ index } />
+                                                            </td>
+                                                        }
+                                                        <td className="admin-table-td-double">{ "Requestor: " + mapItemChild.requestor }</td>
+                                                        <td className="admin-table-td-double">{ "Comments: " + mapItemChild.comments }</td>
                                                     </tr>
                                                 </tbody>
                                             )

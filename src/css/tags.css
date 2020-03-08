@@ -1,11 +1,25 @@
 .title-text{
     font-size: 19px;
-    padding-top: 10px;
+    padding-top: 0px;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.title-parent{
+    overflow: hidden;
+    width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
 }
 .smaller-text{
     font-size: 15px;
     margin-top: -2px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 #new-tag-title{
     font-size: 26px;

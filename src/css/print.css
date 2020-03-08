@@ -1,0 +1,30 @@
+@media print {
+    .print-hide{
+        display: none;
+    }
+    .print-class{
+        text-align:center;
+        position:absolute;
+        width:100%;
+        height:100%;
+    }
+    html, body {
+        height:100%;
+        overflow: hidden;
+    }
+    @page {
+        size: landscape;
+    }
+    iframe{
+        display: flex;
+    }
+    .title-text-print{
+        font-family: 'Gill Sans', 'Gill Sans MT', 'Calibri', 'Trebuchet MS', sans-serif;
+    }
+    .title-text-print{
+        font-size: 1000px;
+    }
+}
+iframe{
+    display: none;
+}

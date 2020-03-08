@@ -113,22 +113,22 @@ function CreatePreviewImage(data) {
     <Col xs={12} md={6} lg={4} className="px-0">
         <Container>
             <Row className={ tagType.bg }>
-                <Col xs="auto" className={ tagType.img }>
-                </Col>
-                <Col xs="auto">
-                    <Row className="title-text justify-content-center">
+                {
+                    !(tagType.img === "null-space") &&
+                    <div className={ tagType.img }>
+                    </div>
+                }
+                <div className="title-parent">
+                    <div className="title-text justify-content-center">
                         { data.data.name }
-                    </Row>
-                    <Row className="smaller-text justify-content-center">
+                    </div>
+                    <div className="smaller-text justify-content-center">
                         { data.data.secondLine }
-                    </Row>
-                    <Row className="smaller-text justify-content-center">
+                    </div>
+                    <div className="smaller-text justify-content-center">
                         { data.data.thirdLine }
-                    </Row>
-                </Col>
-                <Col xs="auto">
-
-                </Col>
+                    </div>
+                </div>
             </Row>
         </Container>
     </Col>

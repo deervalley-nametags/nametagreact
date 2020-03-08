@@ -117,8 +117,6 @@ export function dbUtility(utilityObj){
     if(utilityObj.mode === "auth"){
         return new Promise((resolve, reject) => {
             //first login, must wait so it is a promise
-            let isError = false;
-            
             loginAs(utilityObj.authUser, utilityObj.authPass).then( () => {
                 //now we need to use check auth in order to grab the user
                 checkAuth().then( returned => {

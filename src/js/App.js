@@ -11,6 +11,7 @@ import {
   Spinner
 } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import PrintProvider from 'react-easy-print';
 
 //lazy imports
 const HomePage = lazy( () => import('./HomePage.js'));
@@ -31,6 +32,7 @@ const renderLoader = (
 //start main app: mainly routing
 function App() {
   return (
+    <PrintProvider>
     <Router>
       <NavPage />
       <Container id="main-content-container">
@@ -63,6 +65,7 @@ function App() {
         </Switch>
       </Container>
     </Router>
+    </PrintProvider>
   );
 }
 

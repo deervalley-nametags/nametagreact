@@ -48,3 +48,19 @@ a:hover{
     font-size: 20px;
     padding-top: 5px;
 }
+#example-img-id{
+    max-height: 100%;
+    max-width: 100%;
+    margin: auto;
+}
+.modal-body{
+    text-align:center;
+}
+.modal-dialog{
+    max-width: 100% !important;
+}
+@media (min-width: 768px) {
+    .modal-dialog{
+        max-width: 768px !important;
+    }
+}

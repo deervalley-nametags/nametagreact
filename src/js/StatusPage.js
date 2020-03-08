@@ -77,7 +77,6 @@ const grabStatus = (dateFinished => {
 function StatusPage(props){
     //debug: props.adminMode is true or false, props.dataRowAdmin would be the dataRowAdmin
     //console.log(props);
-    const isAdminMode = props.adminMode;
 
     //tag rows of data, these MUST be filled with the data type or else it will freak out
     const[dataRow, setDataRow] = useState([{
@@ -187,12 +186,7 @@ function StatusPage(props){
 
     //run once only on mount
     useEffect(() => {
-        //set h4 title and search bar placeholder on adminmode
-        if(isAdminMode){
-            setH4Title("Modify Tag Status");
-            setSearchBarPlaceholder("Search for Specific Tags");
-            setAdminPadding("px-0");
-        }
+        
 
         //grab all the unfinished tags using dbUtility promise
         dbUtility({
@@ -244,12 +238,22 @@ function StatusPage(props){
     },[props.dataRowAdmin]);
 
 
+    useEffect(() => {
+        //set h4 title and search bar placeholder on adminmode
+        if(props.adminMode){
+            setH4Title("Modify Tag Status");
+            setSearchBarPlaceholder("Search for Specific Tags");
+            setAdminPadding("px-0");
+        }
+    },[props.adminMode]);
+
+
     //return
     return (
         <Container className={ adminPadding }>
-            <Row className="justify-content-between mt-1 nav-h4-bar-bg">
+            <Row className="justify-content-between mt-1 nav-h4-bar-bg print-hide">
                 {
-                    !isAdminMode &&
+                    !props.adminMode &&
                     <Col xs="auto" className="p-0">
                         <NavLink to="/">
                             <Button>
@@ -341,7 +345,7 @@ function StatusPage(props){
             </Row>
             }
             {
-                (tagsAreDone && !isAdminMode) &&
+                (tagsAreDone && !props.adminMode) &&
                 <Row className="justify-content-center mt-2">
                     <h5 className="green-text mt-2">All tags in the system are done.</h5>
                 </Row>
@@ -351,7 +355,7 @@ function StatusPage(props){
                 dataRow.map((mapItem, index) => 
                     <Row className="mt-1 justify-content-between status-row" key={ "status-" + mapItem.id }>
                         {
-                            isAdminMode &&
+                            props.adminMode &&
                             <Col xs={ 1 } className="px-0">
                                 <Row className="justify-content-center mt-1">
                                     <Col xs="auto">
@@ -409,7 +413,7 @@ function StatusPage(props){
                                 </Row>
                             </Col>
                         }
-                        <Col xs={ isAdminMode ? 5 : 6 } className="px-0">
+                        <Col xs={ props.adminMode ? 5 : 6 } className="px-0">
                             <Suspense fallback={ renderLoader }>
                                 <CreatePreviewImage data={{ 
                                     name: mapItem.data.name,

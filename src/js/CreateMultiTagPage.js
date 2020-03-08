@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory, NavLink, useParams } from "react-router-dom";
 
 //layout import
@@ -9,8 +9,7 @@ import {
     Col,
     InputGroup,
     FormControl,
-    DropdownButton,
-    Dropdown
+    Modal
 } from 'react-bootstrap';
 import '../css/nav.css';
 import '../css/datasheet.css';
@@ -30,8 +29,13 @@ const CreateMultiTagPage = () => {
     //the number it grabs in the url is actually a string, so make it int
     let thisColorCode = parseInt(useParams().id);
 
+
     //this is to be able to load status window when tag created
     let history = useHistory();
+
+
+    //hide/show modal
+    const[showExampleModal, setShowExampleModal] = useState(false);
     
 
     //set the submit array(same data format as multi tag) to default values
@@ -110,16 +114,42 @@ const CreateMultiTagPage = () => {
     const[ statusTextIndex, setStatusTextIndex ] = useState(0);
 
 
+    //adding rows on button click
+    const addRows = () => {
+        let i;
+        let inputData = [];
+
+        //add 10 rows on click
+        for(i = 0; i < 10; i++){
+            //
+            inputData.push({ name: "", secondLine: "", thirdLine: "" });
+        }
+        setTableData([...tableData,...inputData]);
+    }
+
+
     //excel spreadsheet stuff
     const[tableData, setTableData] = useState([
-        { name: 1, secondLine: 2, thirdLine: 3 },
-        { name: "a", secondLine: "b", thirdLine: "c" }
+        { name: "", secondLine: "", thirdLine: "" },
+        { name: "", secondLine: "", thirdLine: "" },
+        { name: "", secondLine: "", thirdLine: "" },
+        { name: "", secondLine: "", thirdLine: "" },
+        { name: "", secondLine: "", thirdLine: "" },
+        { name: "", secondLine: "", thirdLine: "" },
+        { name: "", secondLine: "", thirdLine: "" },
+        { name: "", secondLine: "", thirdLine: "" }
     ]);
+
+
+    //update tableData when excel table updates
+    useEffect(() => {
+        //console.log(tableData);
+    },[tableData]);
 
 
     //setting layout sizes
     const xsSize = 12;
-    const mdSize = 6;
+    //const mdSize = 6;
     //const lgSize = 6;
 
 
@@ -165,22 +195,31 @@ const CreateMultiTagPage = () => {
                     />
                 </InputGroup>
             </Row>
-            <Row className="mt-3 justify-content-between">
+            <Row className="justify-content-between">
                 <Col xs={ xsSize } lg={ 3 }>
-                    <Row>
-                        <DropdownButton className="multi-left-button" title="See Example">
-                            <Dropdown.Item className="multi-left-button">
-                                <img src={ExampleImg} alt="example of how to paste from excel" />
-                            </Dropdown.Item>
-                        </DropdownButton>
+                    <Row className="mt-3">
+                        <Button variant="primary" className="multi-left-button" onClick={ () => {
+                            setShowExampleModal(true);
+                        }}>
+                            See Example
+                        </Button>
+                        <Modal size="xl" show={ showExampleModal } onHide={ () => {
+                            setShowExampleModal(false);
+                        }}>
+                            <Modal.Header closeButton></Modal.Header>
+                            <Modal.Body>
+
+                                <img id="example-img-id" src={ ExampleImg } alt="example of how to paste from excel" />
+                            </Modal.Body>
+                        </Modal>
                     </Row>
                     <Row className="mt-3 justify-content-between">
-                        <Button className="multi-left-button">
-                            Add 20 Rows
+                        <Button className="multi-left-button" onClick={ addRows }>
+                            Add 10 Rows
                         </Button>
                     </Row>
                 </Col>
-                <Col xs={ xsSize } lg={ 9 } className="px-0">
+                <Col xs={ xsSize } lg={ 9 } className="px-0 mt-3">
                     <InputGroup id="comment-box">
                         <FormControl
                             as="textarea"
@@ -209,11 +248,22 @@ const CreateMultiTagPage = () => {
             <Row className="mt-3">
                 <ExcelTable data={ tableData } setData={ setTableData } />
             </Row>
+            <Row className="mt-3">
+                <h4>Preview:</h4>
+                <Col xs={ 12 } md={ 6 } lg={ 4 }>
+                    <CreatePreviewImage data={{ 
+                        colorCode: 3, 
+                        name: "name",
+                        secondLine: "name",
+                        thirdLine: "name"
+                    }} />
+                </Col>
+            </Row>
             <Row className="mt-3 justify-content-end">
-                <Col xs={xsSize} md={mdSize} lg="auto">
+                <Col xs={xsSize} md={ 12 } lg="auto">
                     <p className="mt-2">{ statusText[statusTextIndex] }</p>
                 </Col>
-                <Col xs={xsSize} md={mdSize} lg="auto">
+                <Col xs={xsSize} md={ 12 } lg="auto">
                     <Button type="submit" disabled={ submitGrey } onClick={ submitRequest }>Submit Request</Button>
                 </Col>
             </Row>
@@ -221,5 +271,4 @@ const CreateMultiTagPage = () => {
     );
 };
 
-  
-  export default CreateMultiTagPage;
+export default CreateMultiTagPage;

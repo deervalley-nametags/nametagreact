@@ -1,15 +1,11 @@
 import React from 'react';
 import { Navbar, Container, Button } from 'react-bootstrap';
 import '../css/nav.css';
-import {
-    Switch,
-    Route,
-    NavLink
-  } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function NavPage() {
     return (
-        <Container className="title-banner-container">
+        <Container className="title-banner-container print-hide">
             <Navbar id="title-banner">
                 <h3 id="banner-h3">
                     Deer Valley Nametags

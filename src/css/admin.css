@@ -10,12 +10,12 @@
 .admin-table-td{
     border: 1px solid black;
     width: 200px;
-    height: 30px;
+    height: 40px;
 }
 .admin-table-td-double{
     border: 1px solid black;
     width: 200px;
-    height: 60px;
+    height: 80px;
 }
 .admin-todo-item{
     border: 1px solid white;

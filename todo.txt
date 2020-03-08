@@ -1,12 +1,12 @@
-admin page outdoor tag no duplicate, print button
-
-multi tag excel using react datasheet
-
-tag name input css long name no wrap
-
+excel table:
+-paste from excel
+-enter focus down
+-multiple select and delete
+-submit grey
+-preview imgs
 
 last:
-test ALL tag types
+test ALL tag types, all input fields of both single/multi
 
 
 optional:
