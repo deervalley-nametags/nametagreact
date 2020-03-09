@@ -161,6 +161,9 @@ function AdminPage() {
             if(item.data.thirdline === ""){
                 //empty string means 2 line
                 adminTodoCode = "2-" + item.data.color;
+            }else if(item.data.colorCode === 11){
+                //check here if its a ski tag, color code 11
+                adminTodoCode = "1-" + item.data.color;
             }else{
                 //anything else means 3 line
                 adminTodoCode = "3-" + item.data.color;
@@ -267,7 +270,7 @@ function AdminPage() {
             }
             { 
                 //debug: change this to adminDisplay (true) not (false)
-                adminDisplay &&
+                !adminDisplay &&
                 <Container className="mt-2 mb-5 px-1">
                     <Row className="justify-content-center">
                         <h5 className="grey-text">The Following Tags Need to be Completed:</h5>
@@ -298,12 +301,24 @@ function AdminPage() {
                             }}>
                                 <Col xs={ 12 } lg={ 4 } className="px-0">
                                     <Row>
-                                        <Col>
-                                            <CreatePreviewImage data={{ 
-                                                colorCode: parseInt(mapItem.adminTodoCode.slice(2)),
-                                                name: parseInt(mapItem.adminTodoCode[0]) === 2 ? "2 LINE" : "3 LINE"
-                                            }} />
-                                        </Col>
+                                        {
+                                            !(mapItem.adminTodoCode[3] === "1") &&
+                                            <Col>
+                                                <CreatePreviewImage data={{ 
+                                                    colorCode: parseInt(mapItem.adminTodoCode.slice(2)),
+                                                    name: parseInt(mapItem.adminTodoCode[0]) === 2 ? "2 LINE" : "3 LINE"
+                                                }} />
+                                            </Col>
+                                        }
+                                        {
+                                            (mapItem.adminTodoCode[3] === "1") &&
+                                            <Col>
+                                                <CreatePreviewImage data={{ 
+                                                    colorCode: parseInt(mapItem.adminTodoCode.slice(2)),
+                                                    name: "SKI / BASKET TAG"
+                                                }} />
+                                            </Col>
+                                        }
                                     </Row>
                                     {
                                         (copiedClipboardIndex === index ? true : false) &&
@@ -357,7 +372,7 @@ function AdminPage() {
                                 <Col xs={ 6 } lg={ 4 } className="px-0">
                                     <table className="admin-table" id={ "table-data-" + index }>
                                         {
-                                            !(mapItem.adminTodoCode[2] === "4") &&
+                                            !(mapItem.adminTodoCode[2] === "4" || mapItem.adminTodoCode[3] === "1") &&
                                             mapItem.data.map((mapItemChild, index) => 
                                                 <tbody key={ mapItemChild.id }>
                                                     <tr>
@@ -380,12 +395,15 @@ function AdminPage() {
                                             )
                                         }
                                         {
-                                            (mapItem.adminTodoCode[2] === "4") &&
+                                            (mapItem.adminTodoCode[2] === "4" || mapItem.adminTodoCode[3] === "1") &&
                                             mapItem.data.map((mapItemChild, index) => 
                                                 <tbody key={ mapItemChild.id }>
                                                     <tr>
                                                         <td className="admin-table-td-double">{ mapItemChild.name }</td>
-                                                        <td className="admin-table-td-double">{ mapItemChild.secondLine }</td>
+                                                        {
+                                                            !(mapItem.adminTodoCode[3] === "1") &&
+                                                            <td className="admin-table-td-double">{ mapItemChild.secondLine }</td>
+                                                        }
                                                         {
                                                             !(mapItemChild.thirdLine === "") &&
                                                             <td className="admin-table-td">{ mapItemChild.thirdLine }</td>

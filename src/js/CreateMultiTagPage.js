@@ -36,6 +36,11 @@ const CreateMultiTagPage = () => {
 
     //hide/show modal
     const[showExampleModal, setShowExampleModal] = useState(false);
+
+
+    //comments and requestor temp storage
+    const[tempComments, setTempComments] = useState("");
+    const[tempRequestor, setTempRequestor] = useState("");
     
 
     //set the submit array(same data format as multi tag) to default values
@@ -74,38 +79,11 @@ const CreateMultiTagPage = () => {
     }
 
 
-    //update the status text and disable/enable button
-    const updateSubmitGrey = () => {
-        //also update the submission status, e.g. you need X or Y to submit
-        //if empty string or 0
-        if(submitArray[0].name === "" && submitArray[0].requestor === ""){
-            //false due to name AND requestor
-            setSubmitGrey(true);
-            setStatusTextIndex(0);
-        }else if(submitArray[0].name === ""){
-            //false only to name
-            setSubmitGrey(true);
-            setStatusTextIndex(2);
-        }else if(submitArray[0].requestor === ""){
-            //false only to requestor
-            setSubmitGrey(true);
-            setStatusTextIndex(1);
-        }else if(submitArray[0].name !== "" && submitArray[0].requestor !== ""){
-            //true only if name AND requestor are not empty strings set from textValidation
-            setSubmitGrey(false);
-            setStatusTextIndex(4);
-        }else{
-            //some other condition
-            console.log("updateSubmitGrey() ran into some other condition on validation!");
-        };
-    };
-
-
     //submit grey button text and status text
     const[ submitGrey, setSubmitGrey ] = useState(true);
     //for the status text, only the index of it changes, not the actual string [4] is empty string
     const statusText = [
-        "There must be a requestor, the Name must be at least 3 characters.",
+        "There must be a requestor, there must be at least 1 name or check #",
         "There must be a requestor.",
         "The Name on the tag must be at least 3 characters",
         "Submitting...",
@@ -141,16 +119,75 @@ const CreateMultiTagPage = () => {
     ]);
 
 
-    //update tableData when excel table updates
+    
+    //update submitArray when excel table updates
     useEffect(() => {
-        //console.log(tableData);
-    },[tableData]);
+        //console.dir(tableData);
+        let dataToPush = [];
+        let realIndex = 0;
+
+        //it needs to shave off the empty lines
+        tableData.forEach((item, index) => {
+            
+            //check just the name column in each
+            if(item.name === ""){
+                //if empty do nothing
+            }else{
+                //anything else means it has data, according to .name property
+                
+                //actual push it
+                dataToPush.push(item);
+
+                //add extra values
+                dataToPush[realIndex].color = thisColorCode;
+                dataToPush[realIndex].comments = tempComments;
+                dataToPush[realIndex].requestor = tempRequestor;
+                
+                realIndex++;
+            };
+        });
+
+        //update submitArray
+        setSubmitArray([...dataToPush]);
+    },[tableData,tempComments,tempRequestor,thisColorCode]);
+    
 
 
-    //setting layout sizes
-    const xsSize = 12;
-    //const mdSize = 6;
-    //const lgSize = 6;
+    //when submitArray updates
+    useEffect(() => {
+        //console.log(submitArray);
+
+        //check submit grey button for errors
+        //also update the submission status, e.g. you need X or Y to submit
+        //if empty string or 0
+        //console.log(submitArray.length);
+
+        //catch an error where it replaces the template with nothing
+        if(submitArray.length === 0){
+            //
+            setSubmitGrey(true);
+            setStatusTextIndex(0);
+        }else if(submitArray[0].name === "" && submitArray[0].requestor === ""){
+            //false due to name AND requestor
+            setSubmitGrey(true);
+            setStatusTextIndex(0);
+        }else if(submitArray[0].name === ""){
+            //false only to name
+            setSubmitGrey(true);
+            setStatusTextIndex(2);
+        }else if(submitArray[0].requestor === ""){
+            //false only to requestor
+            setSubmitGrey(true);
+            setStatusTextIndex(1);
+        }else if(submitArray[0].name !== "" && submitArray[0].requestor !== ""){
+            //true only if name AND requestor are not empty strings set from textValidation
+            setSubmitGrey(false);
+            setStatusTextIndex(4);
+        }else{
+            //some other condition
+            console.log("use Effect [submitArray] ran into some other condition on validation!");
+        };
+    },[submitArray]);
 
 
     //return
@@ -181,22 +218,16 @@ const CreateMultiTagPage = () => {
                         aria-describedby="basic-addon1"
                         onChange={ e => {
                             //text validate
-                            let preValue = e.target.value;
-                            let postValue = textValidation(preValue, 3);
-
-                            //grab prior values except for changed element
-                            let priorSubmitObj = submitArray[0];
-                            priorSubmitObj.requestor = postValue;
-                            setSubmitArray([priorSubmitObj]);
-
-                            //update submit grey button
-                            updateSubmitGrey();
+                            let validatedText = textValidation(e.target.value);
+                            
+                            //set temp requestor storage
+                            setTempRequestor(validatedText);
                         }}
                     />
                 </InputGroup>
             </Row>
             <Row className="justify-content-between">
-                <Col xs={ xsSize } lg={ 3 }>
+                <Col xs={  12  } lg={ 3 }>
                     <Row className="mt-3">
                         <Button variant="primary" className="multi-left-button" onClick={ () => {
                             setShowExampleModal(true);
@@ -219,7 +250,7 @@ const CreateMultiTagPage = () => {
                         </Button>
                     </Row>
                 </Col>
-                <Col xs={ xsSize } lg={ 9 } className="px-0 mt-3">
+                <Col xs={  12  } lg={ 9 } className="px-0 mt-3">
                     <InputGroup id="comment-box">
                         <FormControl
                             as="textarea"
@@ -228,16 +259,10 @@ const CreateMultiTagPage = () => {
                             aria-describedby="basic-addon1"
                             onChange={ e => {
                                 //text validate
-                                let preValue = e.target.value;
-                                let postValue = textValidation(preValue);
+                                let validatedText = textValidation(e.target.value);
 
-                                //grab prior values except for changed element
-                                let priorSubmitObj = submitArray[0];
-                                priorSubmitObj.comments = postValue;
-                                setSubmitArray([priorSubmitObj]);
-
-                                //update submit grey button
-                                updateSubmitGrey();
+                                //set temp comments storage
+                                setTempComments(validatedText);
                             }}
                         />
                     </InputGroup>
@@ -248,22 +273,29 @@ const CreateMultiTagPage = () => {
             <Row className="mt-3">
                 <ExcelTable data={ tableData } setData={ setTableData } />
             </Row>
+            <Row>
+                <h5>Preview:</h5>
+
+            </Row>
             <Row className="mt-3">
-                <h4>Preview:</h4>
-                <Col xs={ 12 } md={ 6 } lg={ 4 }>
-                    <CreatePreviewImage data={{ 
-                        colorCode: 3, 
-                        name: "name",
-                        secondLine: "name",
-                        thirdLine: "name"
-                    }} />
-                </Col>
+                {
+                    submitArray.map((item, index) =>
+                        <Col xs={ 12 } md={ 6 } lg={ 4 } key={ index }>
+                            <CreatePreviewImage data={{ 
+                                colorCode: thisColorCode, 
+                                name: item.name,
+                                secondLine: item.secondLine,
+                                thirdLine: item.thirdLine
+                            }} />
+                        </Col>
+                    )
+                }
             </Row>
             <Row className="mt-3 justify-content-end">
-                <Col xs={xsSize} md={ 12 } lg="auto">
+                <Col xs={ 12 } md={ 12 } lg="auto">
                     <p className="mt-2">{ statusText[statusTextIndex] }</p>
                 </Col>
-                <Col xs={xsSize} md={ 12 } lg="auto">
+                <Col xs={ 12 } md={ 12 } lg="auto">
                     <Button type="submit" disabled={ submitGrey } onClick={ submitRequest }>Submit Request</Button>
                 </Col>
             </Row>
