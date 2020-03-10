@@ -40,6 +40,7 @@ function copyToClipboard(id){
     document.execCommand('copy');
 
     //add unselect here if wanted, but it helps to keep it selected
+    //window.getSelection().removeAllRanges();
 }
 
 
@@ -129,6 +130,18 @@ function AdminPage() {
             //setDataRowAdmin to the value of the db read
             //a console.log here will NOT work!
             setDataRowAdmin(statusTags);
+
+            //escape to unfocus
+            document.addEventListener('keydown', function(event) {
+                //console.log(event.key);
+                if(event.key === "Escape"){
+                    //escape pressed, reset copied clip index
+                    setCopiedClipboardIndex(-1);
+
+                    //unselect
+                    window.getSelection().removeAllRanges();
+                };
+            });
         });
     }, []);
 
@@ -217,8 +230,8 @@ function AdminPage() {
 
     //return
     return (
-        <Container>
-            <Row className="justify-content-between nav-h4-bar-bg px-0">
+        <Container className="p-0">
+            <Row className="justify-content-between nav-h4-bar-bg mx-0">
                 <Col xs="auto" className="p-0">
                     <NavLink to="/">
                         <Button>
@@ -241,7 +254,7 @@ function AdminPage() {
             </Row>
             {
                 !adminDisplay &&
-                <Row className="mt-2 px-0">
+                <Row className="mt-2 mx-0">
                     <Col xs={ 10 } className="pl-0 pr-2">
                         <InputGroup>
                             <FormControl
@@ -269,10 +282,10 @@ function AdminPage() {
                 </Row>
             }
             { 
-                //debug: change this to adminDisplay (true) not (false)
+                //debug: change to !adminDisplay && for no-login testing
                 !adminDisplay &&
-                <Container className="mt-2 mb-5 px-1">
-                    <Row className="justify-content-center">
+                <Container className="mt-2 mb-5 pb-4 px-4 admin-top-section">
+                    <Row className="justify-content-center mt-1">
                         <h5 className="grey-text">The Following Tags Need to be Completed:</h5>
                     </Row>
                     {
@@ -324,7 +337,7 @@ function AdminPage() {
                                         (copiedClipboardIndex === index ? true : false) &&
                                         <Row>
                                             <Col md={ 5 } className="ml-2 red-text">
-                                                Copied to Clipboard!
+                                                Copied to Clipboard! ESC to unselect
                                             </Col>
                                             <Col md={ 5 } className="text-center">
                                                 <p className="my-0">MARK THESE AS DONE:</p>
@@ -437,9 +450,11 @@ function AdminPage() {
                             </Row>
                         )
                     }
-                    <StatusPage adminMode={ true } dataRowAdmin={ dataRowAdmin } setDataRowAdmin={ setDataRowAdmin } />
                 </Container>
             }
+            <Container className="mx-0 pb-3 px-4 pt-3 admin-bottom-section">
+                <StatusPage adminMode={ true } dataRowAdmin={ dataRowAdmin } setDataRowAdmin={ setDataRowAdmin } />
+            </Container>
         </Container>
     );
   }

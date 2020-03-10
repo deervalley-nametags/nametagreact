@@ -19,8 +19,18 @@
     height: 80px;
     font-size: 12px;
 }
+.admin-top-section{
+    background-color: rgb(255, 236, 236);
+    border: 1px solid red;
+    border-radius: 10px;
+}
+.admin-bottom-section{
+    background-color: rgb(236, 249, 255);
+    border: 1px solid blue;
+    border-radius: 10px;
+}
 .admin-todo-item{
-    border: 1px solid white;
+    border: 1px solid #777;
     border-radius: 10px;
 }
 .admin-todo-item:nth-child(even){

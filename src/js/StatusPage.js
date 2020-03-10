@@ -241,7 +241,7 @@ function StatusPage(props){
     useEffect(() => {
         //set h4 title and search bar placeholder on adminmode
         if(props.adminMode){
-            setH4Title("Modify Tag Status");
+            setH4Title("Edit Individual Tag Status");
             setSearchBarPlaceholder("Search for Specific Tags");
             setAdminPadding("px-0");
         }
@@ -290,7 +290,7 @@ function StatusPage(props){
                                 //if search value is empty, reset
                                 if(searchValue === ""){
                                     //set the h4 title
-                                    setH4Title("Modify Tag Status");
+                                    setH4Title("Edit Individual Tag Status");
 
                                     dbUtility({
                                         mode: "read_all"
@@ -428,7 +428,10 @@ function StatusPage(props){
                                 <p className="status-b-col-text">Requestor: { mapItem.data.requestor }</p>
                             </Row>
                             <Row>
-                            <p className="status-b-col-text">Requested: { grabDaysAgo(mapItem.data.daterequest) } Days Ago</p>
+                                <p className="status-b-col-text">Requested: { grabDaysAgo(mapItem.data.daterequest) } Days Ago</p>
+                            </Row>
+                            <Row>
+                            <p className="status-b-col-text">Quantity: { mapItem.data.quantity }</p>
                             </Row>
                             <Row>
                                 <p className="status-b-col-text">Comments: { mapItem.data.comments }</p>

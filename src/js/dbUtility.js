@@ -261,7 +261,8 @@ export function dbUtility(utilityObj){
                         requestorarray: requestorArray,
                         comments: arrayItem.comments,
                         daterequest: currentTimestamp,
-                        datefinished: 0
+                        datefinished: 0,
+                        quantity: arrayItem.quantity
                     }).then(function(){
                         //debug when writing is successful
                         //console.log("writing good");

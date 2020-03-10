@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory, NavLink, useParams } from "react-router-dom";
 
 //layout import
@@ -38,7 +38,8 @@ const CreateTagPage = () => {
         secondLine: "",
         thirdLine: "",
         requestor: "",
-        comments: ""
+        comments: "",
+        quantity: (thisColorCode === 1) ? "2 PINS" : "2 MAGNETS",
     }]);
 
 
@@ -66,9 +67,16 @@ const CreateTagPage = () => {
         };
     }
 
+    /*
+    //debug: what is submitArray on update
+    useEffect(() => {
+        console.log(submitArray);
+    },[submitArray]);
+    */
+
 
     //update the status text and disable/enable button
-    const updateSubmitGrey = () => {
+    useEffect(() => {
         //also update the submission status, e.g. you need X or Y to submit
         //if empty string or 0
         if(submitArray[0].name === "" && submitArray[0].requestor === ""){
@@ -91,7 +99,8 @@ const CreateTagPage = () => {
             //some other condition
             console.log("updateSubmitGrey() ran into some other condition on validation!");
         };
-    };
+
+    },[submitArray]);
 
 
     //submit grey button text and status text
@@ -157,16 +166,12 @@ const CreateTagPage = () => {
                                 aria-describedby="basic-addon1"
                                 onChange={ e => {
                                     //text validate
-                                    let preValue = e.target.value;
-                                    let postValue = textValidation(preValue, 3);
+                                    let validatedText = textValidation(e.target.value, 3);
 
                                     //grab prior values except for changed element
                                     let priorSubmitObj = submitArray[0];
-                                    priorSubmitObj.requestor = postValue;
+                                    priorSubmitObj.requestor = validatedText;
                                     setSubmitArray([priorSubmitObj]);
-
-                                    //update submit grey button
-                                    updateSubmitGrey();
                                 }}
                             />
                         </InputGroup>
@@ -179,14 +184,13 @@ const CreateTagPage = () => {
                                 aria-describedby="basic-addon1"
                                 onChange={ e => {
                                     //text validate
-                                    let preValue = e.target.value;
-                                    let postValue = textValidation(preValue, 3);
+                                    let validatedText = textValidation(e.target.value, 3);
 
                                     //only update if not false
-                                    if(postValue !== 0){
+                                    if(validatedText !== 0){
                                         //grab prior values except for changed element
                                         let priorSubmitObj = submitArray[0];
-                                        priorSubmitObj.name = postValue;
+                                        priorSubmitObj.name = validatedText;
                                         setSubmitArray([priorSubmitObj]);
                                     }else{
                                         //otherwise just set it to empty string
@@ -194,11 +198,6 @@ const CreateTagPage = () => {
                                         priorSubmitObj.name = "";
                                         setSubmitArray([priorSubmitObj]);
                                     }
-
-                                    
-
-                                    //update submit grey button
-                                    updateSubmitGrey();
                                 }}
                             />
                         </InputGroup>
@@ -213,16 +212,12 @@ const CreateTagPage = () => {
                         aria-describedby="basic-addon1"
                         onChange={ e => {
                             //text validate
-                            let preValue = e.target.value;
-                            let postValue = textValidation(preValue);
+                            let validatedText = textValidation(e.target.value);
 
                             //grab prior values except for changed element
                             let priorSubmitObj = submitArray[0];
-                            priorSubmitObj.secondLine = postValue;
+                            priorSubmitObj.secondLine = validatedText;
                             setSubmitArray([priorSubmitObj]);
-
-                            //update submit grey button
-                            updateSubmitGrey();
                         }}
                     />
                 </InputGroup>
@@ -235,16 +230,12 @@ const CreateTagPage = () => {
                         aria-describedby="basic-addon1"
                         onChange={ e => {
                             //text validate
-                            let preValue = e.target.value;
-                            let postValue = textValidation(preValue);
+                            let validatedText = textValidation(e.target.value);
 
                             //grab prior values except for changed element
                             let priorSubmitObj = submitArray[0];
-                            priorSubmitObj.thirdLine = postValue;
+                            priorSubmitObj.thirdLine = validatedText;
                             setSubmitArray([priorSubmitObj]);
-
-                            //update submit grey button
-                            updateSubmitGrey();
                         }}
                     />
                 </InputGroup>
@@ -258,20 +249,95 @@ const CreateTagPage = () => {
                         aria-describedby="basic-addon1"
                         onChange={ e => {
                             //text validate
-                            let preValue = e.target.value;
-                            let postValue = textValidation(preValue);
+                            let validatedText = textValidation(e.target.value);
 
                             //grab prior values except for changed element
                             let priorSubmitObj = submitArray[0];
-                            priorSubmitObj.comments = postValue;
+                            priorSubmitObj.comments = validatedText;
                             setSubmitArray([priorSubmitObj]);
-
-                            //update submit grey button
-                            updateSubmitGrey();
                         }}
                     />
                 </InputGroup>
             </Row>
+            {
+                (thisColorCode === 1 || thisColorCode === 2 || thisColorCode === 3) &&
+                <Row className="justify-content-between pinmag-row mt-3">
+                    <Col xs={ 12 } md="auto" className="px-0">
+                        <label className="mb-0">
+                            <InputGroup>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Radio 
+                                        name="pinmag" 
+                                        aria-label="Radio for PIN" 
+                                        defaultChecked={ (thisColorCode === 1) ? true : false }
+                                        onChange={e => {
+                                            //if checked is true
+                                            if(e.target.checked){
+                                                //set value accordingly
+                                                let oldSubmitArray = submitArray;
+                                                oldSubmitArray[0].quantity = "2 PINS";
+                                                setSubmitArray([...oldSubmitArray]);
+                                            }
+                                        }}
+                                    />
+                                </InputGroup.Prepend>
+                                <InputGroup.Append>
+                                    <InputGroup.Text>2 PINS</InputGroup.Text>
+                                </InputGroup.Append>
+                            </InputGroup>
+                        </label>
+                    </Col>
+                    <Col xs={ 12 } md="auto" className="px-0">
+                        <label className="mb-0">
+                            <InputGroup>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Radio 
+                                        name="pinmag" 
+                                        aria-label="Radio for PIN" 
+                                        defaultChecked={ (thisColorCode !== 1) ? true : false }
+                                        onChange={e => {
+                                            //if checked is true
+                                            if(e.target.checked){
+                                                //set value accordingly
+                                                let oldSubmitArray = submitArray;
+                                                oldSubmitArray[0].quantity = "2 MAGNETS";
+                                                setSubmitArray([...oldSubmitArray]);
+                                            }
+                                        }}
+                                    />
+                                </InputGroup.Prepend>
+                                <InputGroup.Append>
+                                    <InputGroup.Text>2 MAGNETS</InputGroup.Text>
+                                </InputGroup.Append>
+                            </InputGroup>
+                        </label>
+                    </Col>
+                    <Col xs={ 12 } md="auto" className="px-0">
+                        <label className="mb-0">
+                            <InputGroup>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Radio 
+                                        name="pinmag" 
+                                        aria-label="Radio for PIN and MAG" 
+                                        onChange={e => {
+                                            //if checked is true
+                                            if(e.target.checked){
+                                                //set value accordingly
+                                                let oldSubmitArray = submitArray;
+                                                oldSubmitArray[0].quantity = "1 PIN + 1 MAGNET";
+                                                setSubmitArray([...oldSubmitArray]);
+                                            }
+                                        }}
+                                    />
+                                </InputGroup.Prepend>
+                                <InputGroup.Append>
+                                    <InputGroup.Text>1 PIN + 1 MAGNET</InputGroup.Text>
+                                </InputGroup.Append>
+                            </InputGroup>
+                        </label>
+                    </Col>
+                </Row>
+            }
             <Row className="mt-3 justify-content-end">
                 <Col xs={xsSize} md={mdSize} lg="auto">
                     <p className="mt-2">{ statusText[statusTextIndex] }</p>

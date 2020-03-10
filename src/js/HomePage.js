@@ -21,6 +21,11 @@ function HomePage() {
         name: "Name",
         secondLine: "City, ST"
     },{
+        colorCode: 1,
+        name: "Name",
+        secondLine: "Title",
+        thirdLine: "Department"
+    },{
         colorCode: 2,
         name: "Name",
         secondLine: "Title"
@@ -28,6 +33,11 @@ function HomePage() {
         colorCode: 2,
         name: "Name",
         secondLine: "City, ST"
+    },{
+        colorCode: 2,
+        name: "Name",
+        secondLine: "Title",
+        thirdLine: "Department"
     },{
         colorCode: 3,
         name: "Name",
@@ -37,6 +47,11 @@ function HomePage() {
         name: "Name",
         secondLine: "City, ST"
     },{
+        colorCode: 3,
+        name: "Name",
+        secondLine: "Title",
+        thirdLine: "Department"
+    },{
         colorCode: 4,
         name: "Name",
         secondLine: "Title"
@@ -44,14 +59,19 @@ function HomePage() {
         colorCode: 4,
         name: "Name",
         secondLine: "City, ST"
+    },{
+        colorCode: 4,
+        name: "Name",
+        secondLine: "Title",
+        thirdLine: "Department"
     },{
         colorCode: 11,
         name: "Ski / Basket Check",
-        secondLine: "Put Details in Comments"
+        secondLine: "Click to Enter Details"
     },{
         colorCode: 5,
-        name: "Sign",
-        secondLine: "Put Details in Comments"
+        name: "Custom Sign",
+        secondLine: "Click to Enter Details"
     }];
 
     return (

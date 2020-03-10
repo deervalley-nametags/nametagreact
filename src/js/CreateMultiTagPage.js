@@ -41,6 +41,7 @@ const CreateMultiTagPage = () => {
     //comments and requestor temp storage
     const[tempComments, setTempComments] = useState("");
     const[tempRequestor, setTempRequestor] = useState("");
+    const[tempQuantity, setTempQuantity] = useState((thisColorCode === 1) ? "2 PINS" : "2 MAGNETS");
     
 
     //set the submit array(same data format as multi tag) to default values
@@ -50,7 +51,8 @@ const CreateMultiTagPage = () => {
         secondLine: "",
         thirdLine: "",
         requestor: "",
-        comments: ""
+        comments: "",
+        quantity: (thisColorCode === 1) ? "2 PINS" : "2 MAGNETS",
     }]);
 
 
@@ -142,6 +144,7 @@ const CreateMultiTagPage = () => {
                 dataToPush[realIndex].color = thisColorCode;
                 dataToPush[realIndex].comments = tempComments;
                 dataToPush[realIndex].requestor = tempRequestor;
+                dataToPush[realIndex].quantity = tempQuantity;
                 
                 realIndex++;
             };
@@ -149,7 +152,7 @@ const CreateMultiTagPage = () => {
 
         //update submitArray
         setSubmitArray([...dataToPush]);
-    },[tableData,tempComments,tempRequestor,thisColorCode]);
+    },[tableData,tempComments,tempRequestor,thisColorCode,tempQuantity]);
     
 
 
@@ -273,6 +276,79 @@ const CreateMultiTagPage = () => {
             <Row className="mt-3">
                 <ExcelTable data={ tableData } setData={ setTableData } />
             </Row>
+            {
+                (thisColorCode === 1 || thisColorCode === 2 || thisColorCode === 3) &&
+                <Row className="justify-content-between pinmag-row mt-3">
+                    <Col xs={ 12 } md="auto" className="px-0">
+                        <label className="mb-0">
+                            <InputGroup>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Radio 
+                                        name="pinmag" 
+                                        aria-label="Radio for PIN" 
+                                        defaultChecked={ (thisColorCode === 1) ? true : false }
+                                        onChange={e => {
+                                            //if checked is true
+                                            if(e.target.checked){
+                                                //set value accordingly
+                                                setTempQuantity("2 PINS");
+                                            }
+                                        }}
+                                    />
+                                </InputGroup.Prepend>
+                                <InputGroup.Append>
+                                    <InputGroup.Text>2 PINS</InputGroup.Text>
+                                </InputGroup.Append>
+                            </InputGroup>
+                        </label>
+                    </Col>
+                    <Col xs={ 12 } md="auto" className="px-0">
+                        <label className="mb-0">
+                            <InputGroup>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Radio 
+                                        name="pinmag" 
+                                        aria-label="Radio for PIN" 
+                                        defaultChecked={ (thisColorCode !== 1) ? true : false }
+                                        onChange={e => {
+                                            //if checked is true
+                                            if(e.target.checked){
+                                                //set value accordingly
+                                                setTempQuantity("2 MAGNETS");
+                                            }
+                                        }}
+                                    />
+                                </InputGroup.Prepend>
+                                <InputGroup.Append>
+                                    <InputGroup.Text>2 MAGNETS</InputGroup.Text>
+                                </InputGroup.Append>
+                            </InputGroup>
+                        </label>
+                    </Col>
+                    <Col xs={ 12 } md="auto" className="px-0">
+                        <label className="mb-0">
+                            <InputGroup>
+                                <InputGroup.Prepend>
+                                    <InputGroup.Radio 
+                                        name="pinmag" 
+                                        aria-label="Radio for PIN and MAG" 
+                                        onChange={e => {
+                                            //if checked is true
+                                            if(e.target.checked){
+                                                //set value accordingly
+                                                setTempQuantity("1 PIN + 1 MAGNET");
+                                            }
+                                        }}
+                                    />
+                                </InputGroup.Prepend>
+                                <InputGroup.Append>
+                                    <InputGroup.Text>1 PIN + 1 MAGNET</InputGroup.Text>
+                                </InputGroup.Append>
+                            </InputGroup>
+                        </label>
+                    </Col>
+                </Row>
+            }
             <Row>
                 <h5>Preview:</h5>
 
