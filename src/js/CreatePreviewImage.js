@@ -5,6 +5,7 @@ import {
     Container
 } from 'react-bootstrap';
 import '../css/tags.css';
+import '../css/signcolor.css';
 
 function colorCodeToClass(colorCode){
     /*
@@ -94,12 +95,21 @@ function colorCodeToClass(colorCode){
 
 function CreatePreviewImage(data) {
     /*
-    data use format: 
+    data use format for non signs: 
     <CreatePreviewImage data={ 
-        obj.name,
-        obj.secondLine,
-        obj.colorCode,
-        obj.thirdLine(if exist)
+        name,
+        secondLine,
+        colorCode,
+        thirdLine(if it exists)
+    } />
+    -
+    data use format for signs: 
+    <CreatePreviewImage data={ 
+        name,
+        height,
+        width,
+        signColor,
+        attachment
     } />
     */
 
@@ -108,30 +118,73 @@ function CreatePreviewImage(data) {
     //console.log(tagType.img);
     tagType.bg = tagType.bg + "  justify-content-between";
 
+    //if custom sign
+    let pixelHeight = parseFloat(data.data.height);
+    let pixelWidth = parseFloat(data.data.width);
+    let splitClasses = [];
+    let newLineContents = data.data.name;
+    if(data.data.colorCode === 5){
+        //grab signcolor classes
+        splitClasses = data.data.signColor.split(" / ");
+        splitClasses[0] = "color-" + splitClasses[0].toLowerCase();
+        splitClasses[1] = "bg-" + splitClasses[1].toLowerCase();
+
+        //do sign math
+        pixelHeight *= 50;
+        pixelWidth *= 50;
+        pixelHeight = pixelHeight + "px";
+        pixelWidth = pixelWidth + "px";
+
+        newLineContents = newLineContents.split("\n");
+        console.log(newLineContents);
+    }
+
     //return page with compiled data
     return (
-    <Col xs={12} md={6} lg={4} className="px-0">
-        <Container>
-            <Row className={ tagType.bg }>
-                {
-                    !(tagType.img === "null-space") &&
-                    <div className={ tagType.img }>
+        <Col xs={12} md={6} lg={4} className="px-0">
+            {
+                (data.data.colorCode !== 5) &&
+                <Container>
+                    <Row className={ tagType.bg }>
+                        {
+                            !(tagType.img === "null-space") &&
+                            <div className={ tagType.img }>
+                            </div>
+                        }
+                        <div className="title-parent">
+                            <div className="title-text justify-content-center">
+                                { data.data.name }
+                            </div>
+                            <div className="smaller-text justify-content-center">
+                                { data.data.secondLine }
+                            </div>
+                            <div className="smaller-text justify-content-center">
+                                { data.data.thirdLine }
+                            </div>
+                        </div>
+                    </Row>
+                </Container>
+            }
+            {
+                (data.data.colorCode === 5) &&
+                <Container style={{ 
+                    width: pixelWidth,
+                    height: pixelHeight,
+                    textAlign: "center",
+                    margin: "auto",
+                    display: "flex",
+                    flexDirection: "row"
+                }} className={ splitClasses[1] + " " + splitClasses[0] + " bg-basic" }>
+                    <div style={{ display: "flex", flexDirection: "column", margin: "auto" }}>
+                        {
+                            newLineContents.map((mapItem, index) => 
+                                <Row className="justify-content-center" key={ index }>{ mapItem }</Row>
+                            )
+                        }
                     </div>
-                }
-                <div className="title-parent">
-                    <div className="title-text justify-content-center">
-                        { data.data.name }
-                    </div>
-                    <div className="smaller-text justify-content-center">
-                        { data.data.secondLine }
-                    </div>
-                    <div className="smaller-text justify-content-center">
-                        { data.data.thirdLine }
-                    </div>
-                </div>
-            </Row>
-        </Container>
-    </Col>
+                </Container>
+            }
+        </Col>
     );
 }
 

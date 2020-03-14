@@ -53,8 +53,14 @@ a:hover{
     max-width: 100%;
     margin: auto;
 }
+.dropdown-toggle{
+    width: 100%;
+}
 .modal-body{
     text-align:center;
+}
+.dropdown-item{
+    color: black !important;
 }
 .modal-dialog{
     max-width: 100% !important;

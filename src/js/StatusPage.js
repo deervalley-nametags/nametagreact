@@ -248,6 +248,11 @@ function StatusPage(props){
     },[props.adminMode]);
 
 
+    useEffect(() => {
+        console.log(dataRow);
+    },[dataRow]);
+
+
     //return
     return (
         <Container className={ adminPadding }>
@@ -415,12 +420,26 @@ function StatusPage(props){
                         }
                         <Col xs={ props.adminMode ? 5 : 6 } className="px-0">
                             <Suspense fallback={ renderLoader }>
-                                <CreatePreviewImage data={{ 
-                                    name: mapItem.data.name,
-                                    secondLine: mapItem.data.titlecity,
-                                    thirdLine: mapItem.data.thirdline,
-                                    colorCode: mapItem.data.color
-                                }} />
+                                {
+                                    (mapItem.data.color !== 5) &&
+                                    <CreatePreviewImage data={{ 
+                                        name: mapItem.data.name,
+                                        secondLine: mapItem.data.titlecity,
+                                        thirdLine: mapItem.data.thirdline,
+                                        colorCode: mapItem.data.color
+                                    }} />
+                                }
+                                {
+                                    (mapItem.data.color === 5) &&
+                                    <CreatePreviewImage data={{ 
+                                        name: mapItem.data.name,
+                                        colorCode: 5,
+                                        signColor: "white-green",
+                                        attachment: mapItem.data.attachment,
+                                        height: mapItem.data.height,
+                                        width: mapItem.data.width
+                                    }} />
+                                }
                             </Suspense>
                         </Col>
                         <Col xs={ 4 } className="px-0">

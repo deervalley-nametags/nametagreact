@@ -17,6 +17,7 @@ import PrintProvider from 'react-easy-print';
 const HomePage = lazy( () => import('./HomePage.js'));
 const StatusPage = lazy( () => import('./StatusPage.js'));
 const AdminPage = lazy( () => import('./AdminPage.js'));
+const CustomSignPage = lazy( () => import('./CustomSignPage.js'));
 const CreateTagPage = lazy( () => import('./CreateTagPage.js'));
 const CreateMultiTagPage = lazy( () => import('./CreateMultiTagPage.js'));
 
@@ -55,6 +56,11 @@ function App() {
           <Route path="/create/:id">
             <Suspense fallback={ renderLoader }>
               <CreateTagPage />
+            </Suspense>
+          </Route>
+          <Route path="/sign">
+            <Suspense fallback={ renderLoader }>
+              <CustomSignPage />
             </Suspense>
           </Route>
           <Route path="/createmultiple/:id">

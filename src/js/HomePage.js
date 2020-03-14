@@ -95,9 +95,18 @@ function HomePage() {
                     startingTags.map(( mapItem, index ) => 
                         <Col className="p-0 mb-1 justify-content-center start-tag-container" xs="auto" key={ index }>
                             <div className="start-tag">
-                                <NavLink to={ '/create/' + mapItem.colorCode }>
-                                        <CreatePreviewImage data={ mapItem } />
-                                </NavLink>
+                                {
+                                    (mapItem.colorCode !== 5) &&
+                                    <NavLink to={ '/create/' + mapItem.colorCode }>
+                                            <CreatePreviewImage data={ mapItem } />
+                                    </NavLink>
+                                }
+                                {
+                                    (mapItem.colorCode === 5) &&
+                                    <NavLink to={ '/sign' }>
+                                            <CreatePreviewImage data={ mapItem } />
+                                    </NavLink>
+                                }
                             </div>
                         </Col>
                     )

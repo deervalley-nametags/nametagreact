@@ -5,3 +5,7 @@ test ALL tag types, all input fields of both single/multi
 optional:
 cache (use memo?) on status
 admin to stay logged in session
+
+
+status page error: cant display colorCode 5(sign)
+dataRow updates somewhere, need to find where, the db updates successfully, but there are no cust om sign fields FROM the db on the page

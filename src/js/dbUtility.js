@@ -250,24 +250,51 @@ export function dbUtility(utilityObj){
                     let date = new Date();
                     let currentTimestamp = date.getTime();
             
-                    //make a new document in db, auto gen id
-                    namesRef.add({
-                        name: tagName,
-                        namearray: nameArray,
-                        color: arrayItem.color,
-                        titlecity: arrayItem.secondLine,
-                        thirdline: arrayItem.thirdLine,
-                        requestor: tagRequestor,
-                        requestorarray: requestorArray,
-                        comments: arrayItem.comments,
-                        daterequest: currentTimestamp,
-                        datefinished: 0,
-                        quantity: arrayItem.quantity
-                    }).then(function(){
-                        //debug when writing is successful
-                        //console.log("writing good");
-                        resolve(true);
-                    });
+                    //if sign, add only sign stuff
+                    if(arrayItem.color === 5){
+                        //sign
+                        //make a new document in db, auto gen id
+                        namesRef.add({
+                            name: tagName,
+                            namearray: nameArray,
+                            color: 5,
+                            attachment: arrayItem.attachment,
+                            signcolor: arrayItem.signColor,
+                            signquantity: arrayItem.signQuantity,
+                            height: arrayItem.height,
+                            width: arrayItem.width,
+                            thickness: arrayItem.thickness,
+                            requestor: tagRequestor,
+                            requestorarray: requestorArray,
+                            comments: arrayItem.comments,
+                            daterequest: currentTimestamp,
+                            datefinished: 0
+                        }).then(function(){
+                            //debug when writing is successful
+                            //console.log("writing good");
+                            resolve(true);
+                        });
+                    }else{
+                        //anything other than sign
+                        //make a new document in db, auto gen id
+                        namesRef.add({
+                            name: tagName,
+                            namearray: nameArray,
+                            color: arrayItem.color,
+                            titlecity: arrayItem.secondLine,
+                            thirdline: arrayItem.thirdLine,
+                            requestor: tagRequestor,
+                            requestorarray: requestorArray,
+                            comments: arrayItem.comments,
+                            daterequest: currentTimestamp,
+                            datefinished: 0,
+                            quantity: arrayItem.quantity
+                        }).then(function(){
+                            //debug when writing is successful
+                            //console.log("writing good");
+                            resolve(true);
+                        });
+                    }
                 });
             });
         });

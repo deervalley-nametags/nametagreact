@@ -39,7 +39,7 @@ const CreateTagPage = () => {
         thirdLine: "",
         requestor: "",
         comments: "",
-        quantity: (thisColorCode === 1) ? "2 PINS" : "2 MAGNETS",
+        quantity: (thisColorCode === 1) ? "2 PINS" : "2 MAGNETS"
     }]);
 
 
@@ -74,7 +74,6 @@ const CreateTagPage = () => {
     },[submitArray]);
     */
 
-
     //update the status text and disable/enable button
     useEffect(() => {
         //also update the submission status, e.g. you need X or Y to submit
@@ -107,7 +106,7 @@ const CreateTagPage = () => {
     const[ submitGrey, setSubmitGrey ] = useState(true);
     //for the status text, only the index of it changes, not the actual string [4] is empty string
     const statusText = [
-        "There must be a requestor, the Name must be at least 3 characters.",
+        "There must be a requestor, The Name on the tag must be at least 3 characters",
         "There must be a requestor.",
         "The Name on the tag must be at least 3 characters",
         "Submitting...",
@@ -163,15 +162,22 @@ const CreateTagPage = () => {
                             <FormControl
                                 placeholder="Requestor (or: WHO to Mail it to)"
                                 aria-label="Requestor"
-                                aria-describedby="basic-addon1"
                                 onChange={ e => {
                                     //text validate
                                     let validatedText = textValidation(e.target.value, 3);
 
-                                    //grab prior values except for changed element
-                                    let priorSubmitObj = submitArray[0];
-                                    priorSubmitObj.requestor = validatedText;
-                                    setSubmitArray([priorSubmitObj]);
+                                    //only update if not false
+                                    if(validatedText !== 0){
+                                        //grab prior values except for changed element
+                                        let priorSubmitObj = submitArray[0];
+                                        priorSubmitObj.requestor = validatedText;
+                                        setSubmitArray([priorSubmitObj]);
+                                    }else{
+                                        //otherwise just set it to empty string
+                                        let priorSubmitObj = submitArray[0];
+                                        priorSubmitObj.requestor = "";
+                                        setSubmitArray([priorSubmitObj]);
+                                    }
                                 }}
                             />
                         </InputGroup>
@@ -179,9 +185,8 @@ const CreateTagPage = () => {
                     <Row>
                         <InputGroup className="mt-3">
                             <FormControl
-                                placeholder="Name on tag(or sign title)"
+                                placeholder="Name on tag"
                                 aria-label="Name"
-                                aria-describedby="basic-addon1"
                                 onChange={ e => {
                                     //text validate
                                     let validatedText = textValidation(e.target.value, 3);
@@ -209,7 +214,6 @@ const CreateTagPage = () => {
                     <FormControl
                         placeholder="Title OR: City, ST"
                         aria-label="Second Line"
-                        aria-describedby="basic-addon1"
                         onChange={ e => {
                             //text validate
                             let validatedText = textValidation(e.target.value);
@@ -227,7 +231,6 @@ const CreateTagPage = () => {
                     <FormControl
                         placeholder="Third Line(if applicable)"
                         aria-label="Third Line"
-                        aria-describedby="basic-addon1"
                         onChange={ e => {
                             //text validate
                             let validatedText = textValidation(e.target.value);
@@ -246,7 +249,6 @@ const CreateTagPage = () => {
                         as="textarea"
                         placeholder="Comments"
                         aria-label="Comments"
-                        aria-describedby="basic-addon1"
                         onChange={ e => {
                             //text validate
                             let validatedText = textValidation(e.target.value);

@@ -1,0 +1,83 @@
+.color-black{
+    color: black;
+}
+.color-bronze{
+    color: rgb(233, 174, 64);
+}
+.color-red{
+    color: rgb(224, 11, 11);
+}
+.color-white{
+    color: #fff;
+}
+.color-green{
+    color: green;
+}
+.color-brown{
+    color: rgb(155, 97, 9);
+}
+.color-silver{
+    color: #ccc;
+}
+.color-blue{
+    color: blue;
+}
+.color-orange{
+    color: orange;
+}
+.color-yellow{
+    color: yellow;
+}
+
+.bg-black{
+    background-color: black;
+}
+.bg-bronze{
+    background-color: rgb(233, 174, 64);
+}
+.bg-red{
+    background-color: rgb(224, 11, 11);
+}
+.bg-white{
+    background-color: white;
+}
+.bg-green{
+    background-color: green;
+}
+.bg-brown{
+    background-color: rgb(155, 97, 9);
+}
+.bg-silver{
+    background-color: #ccc;
+}
+.bg-blue{
+    background-color: rgb(4, 114, 204);
+}
+.bg-orange{
+    background-color: orange;
+}
+.bg-yellow{
+    background-color: yellow;
+}
+.bg-basic{
+    border:1px solid black;
+    width:250px;
+    height:36px;
+    border: 0px;
+    text-align: center;
+    padding-top: 4px;
+    margin-bottom: 2px;
+    font-weight: 700;
+    --notchSize: 14px;
+    clip-path: 
+        polygon(
+        0% var(--notchSize), 
+        var(--notchSize) 0%, 
+        calc(100% - var(--notchSize)) 0%, 
+        100% var(--notchSize), 
+        100% calc(100% - var(--notchSize)), 
+        calc(100% - var(--notchSize)) 100%, 
+        var(--notchSize) 100%, 
+        0% calc(100% - var(--notchSize))
+        );
+}
