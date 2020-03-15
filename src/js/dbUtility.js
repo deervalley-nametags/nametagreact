@@ -153,6 +153,7 @@ export function dbUtility(utilityObj){
                         //for each document found as unfinished, array push the following
 
                         //search for any matching id's in promiseReturn
+                        //this section is because for some reason it was duplicating, so now it only does one once
                         let priorExistingId = promiseReturn.findIndex(obj => obj.id === doc.id);
                         if(priorExistingId === -1){
                             //-1 means it did not find a prior id, so go ahead

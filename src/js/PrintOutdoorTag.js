@@ -11,7 +11,7 @@ import { Print } from 'react-easy-print';
 function PrintOutdoorTag(props){
     useEffect(() => {
         //debug: what is passed in as props
-        console.log(props.props);
+        //console.log(props.props);
         //console.log(props.index);
     },[props.props]);
 

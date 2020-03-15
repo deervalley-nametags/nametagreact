@@ -1,7 +1,5 @@
 import React from 'react';
 import { 
-    Col,
-    Row,
     Container
 } from 'react-bootstrap';
 import '../css/signcolor.css';

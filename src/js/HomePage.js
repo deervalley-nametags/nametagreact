@@ -70,8 +70,10 @@ function HomePage() {
         secondLine: "Click to Enter Details"
     },{
         colorCode: 5,
-        name: "Custom Sign",
-        secondLine: "Click to Enter Details"
+        name: "Custom Sign\nClick to Enter Details",
+        signColor: "White / Blue",
+        width: 7,
+        height: 3
     }];
 
     return (
@@ -94,20 +96,22 @@ function HomePage() {
                 {
                     startingTags.map(( mapItem, index ) => 
                         <Col className="p-0 mb-1 justify-content-center start-tag-container" xs="auto" key={ index }>
-                            <div className="start-tag">
-                                {
-                                    (mapItem.colorCode !== 5) &&
+                            {
+                                (mapItem.colorCode !== 5) &&
+                                <div className="start-tag">
                                     <NavLink to={ '/create/' + mapItem.colorCode }>
                                             <CreatePreviewImage data={ mapItem } />
                                     </NavLink>
-                                }
-                                {
-                                    (mapItem.colorCode === 5) &&
+                                </div>
+                            }
+                            {
+                                (mapItem.colorCode === 5) &&
+                                <div className="start-tag-sign">
                                     <NavLink to={ '/sign' }>
                                             <CreatePreviewImage data={ mapItem } />
                                     </NavLink>
-                                }
-                            </div>
+                                </div>
+                            }
                         </Col>
                     )
                 }

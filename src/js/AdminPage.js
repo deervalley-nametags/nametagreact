@@ -60,7 +60,12 @@ function AdminPage() {
             requestor: "",
             datefinished: 0,
             daterequest: 0,
-            reqDaysAgo: 0
+            reqDaysAgo: 0,
+            height: 1,
+            width: 1,
+            attachment: "",
+            thickness: "",
+            signColor: ""
         }
     }]);
 
@@ -211,7 +216,14 @@ function AdminPage() {
                 secondLine: item.data.titlecity,
                 thirdLine: item.data.thirdline,
                 comments: item.data.comments,
-                requestor: item.data.requestor
+                requestor: item.data.requestor,
+                thickness: item.data.thickness,
+                height: item.data.height,
+                width: item.data.width,
+                attachment: item.data.attachment,
+                signColor: item.data.signcolor,
+                signQuantity: item.data.signquantity
+
             });
         });
 
@@ -282,8 +294,8 @@ function AdminPage() {
                 </Row>
             }
             { 
-                //debug: change to !adminDisplay && for no-login testing
-                !adminDisplay &&
+                //debug: change to !adminDisplay && for no-login testing, adminDisplay && for final
+                adminDisplay &&
                 <Container className="mt-2 mb-5 pb-4 px-4 admin-top-section">
                     <Row className="justify-content-center mt-1">
                         <h5 className="grey-text">The Following Tags Need to be Completed:</h5>
@@ -315,7 +327,7 @@ function AdminPage() {
                                 <Col xs={ 12 } lg={ 4 } className="px-0">
                                     <Row>
                                         {
-                                            !(mapItem.adminTodoCode[3] === "1") &&
+                                            (mapItem.adminTodoCode[3] !== "1" && mapItem.adminTodoCode[2] !== "5") &&
                                             <Col>
                                                 <CreatePreviewImage data={{ 
                                                     colorCode: parseInt(mapItem.adminTodoCode.slice(2)),
@@ -385,7 +397,7 @@ function AdminPage() {
                                 <Col xs={ 6 } lg={ 4 } className="px-0">
                                     <table className="admin-table" id={ "table-data-" + index }>
                                         {
-                                            !(mapItem.adminTodoCode[2] === "4" || mapItem.adminTodoCode[3] === "1") &&
+                                            (mapItem.adminTodoCode[2] !== "4" && mapItem.adminTodoCode[3] !== "1" && mapItem.adminTodoCode[2] !== "5") &&
                                             mapItem.data.map((mapItemChild, index) => 
                                                 <tbody key={ mapItemChild.id }>
                                                     <tr>
@@ -425,6 +437,30 @@ function AdminPage() {
                                                 </tbody>
                                             )
                                         }
+                                        {
+                                            (mapItem.adminTodoCode[2] === "5") &&
+                                            mapItem.data.map((mapItemChild, index) => 
+                                                <tbody key={ mapItemChild.id }>
+                                                    <tr>
+                                                        <td colSpan={ 4 } className="admin-table-td-double">
+                                                            <CreatePreviewImage data={{ 
+                                                                colorCode: 5,
+                                                                name: mapItemChild.name,
+                                                                signColor: mapItemChild.signColor,
+                                                                width: mapItemChild.width,
+                                                                height: mapItemChild.height
+                                                            }} />
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td className="admin-table-td-double">Thickness: { mapItemChild.thickness }</td>
+                                                        <td className="admin-table-td-double">Attachment: { mapItemChild.attachment }</td>
+                                                        <td className="admin-table-td-double">Height: { mapItemChild.height }"</td>
+                                                        <td className="admin-table-td-double">Width: { mapItemChild.width }"</td>
+                                                    </tr>
+                                                </tbody>
+                                            )
+                                        }
                                     </table >
                                 </Col>
                                 <Col xs={ 6 } lg={ 4 } className="pr-0">
@@ -442,6 +478,13 @@ function AdminPage() {
                                                         <td className="admin-table-td-double">{ "Requestor: " + mapItemChild.requestor }</td>
                                                         <td className="admin-table-td-double">{ "Comments: " + mapItemChild.comments }</td>
                                                     </tr>
+                                                    {
+                                                        (mapItem.adminTodoCode[2] === "5") &&
+                                                        <tr>
+                                                            <td className="admin-table-td-double">Quantity: { mapItemChild.signQuantity }</td>
+                                                            <td className="admin-table-td-double">Color: { mapItemChild.signColor }</td>
+                                                    </tr>
+                                                    }
                                                 </tbody>
                                             )
                                         }
@@ -452,9 +495,12 @@ function AdminPage() {
                     }
                 </Container>
             }
-            <Container className="mx-0 pb-3 px-4 pt-3 admin-bottom-section">
-                <StatusPage adminMode={ true } dataRowAdmin={ dataRowAdmin } setDataRowAdmin={ setDataRowAdmin } />
-            </Container>
+            {
+                adminDisplay &&
+                <Container className="mx-0 pb-3 px-4 pt-3 admin-bottom-section">
+                    <StatusPage adminMode={ true } dataRowAdmin={ dataRowAdmin } setDataRowAdmin={ setDataRowAdmin } />
+                </Container>
+            }
         </Container>
     );
   }

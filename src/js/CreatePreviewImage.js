@@ -109,7 +109,8 @@ function CreatePreviewImage(data) {
         height,
         width,
         signColor,
-        attachment
+        attachment,
+        thickness
     } />
     */
 
@@ -119,15 +120,21 @@ function CreatePreviewImage(data) {
     tagType.bg = tagType.bg + "  justify-content-between";
 
     //if custom sign
-    let pixelHeight = parseFloat(data.data.height);
-    let pixelWidth = parseFloat(data.data.width);
+    let pixelHeight;
+    let pixelWidth;
     let splitClasses = [];
     let newLineContents = data.data.name;
+    //console.log(data.data.colorCode);
+    
     if(data.data.colorCode === 5){
         //grab signcolor classes
+        //console.log(data.data.quantity);
         splitClasses = data.data.signColor.split(" / ");
         splitClasses[0] = "color-" + splitClasses[0].toLowerCase();
         splitClasses[1] = "bg-" + splitClasses[1].toLowerCase();
+        
+        pixelHeight = parseFloat(data.data.height);
+        pixelWidth = parseFloat(data.data.width);
 
         //do sign math
         pixelHeight *= 50;
@@ -136,8 +143,9 @@ function CreatePreviewImage(data) {
         pixelWidth = pixelWidth + "px";
 
         newLineContents = newLineContents.split("\n");
-        console.log(newLineContents);
-    }
+        //console.log(newLineContents);
+    };
+    
 
     //return page with compiled data
     return (

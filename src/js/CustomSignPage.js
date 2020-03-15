@@ -164,7 +164,7 @@ const CustomSignPage = () => {
             console.log("updateSubmitGrey() ran into some other condition on validation!");
         };
 
-        console.log(submitArray);
+        //console.log(submitArray);
 
     },[submitArray]);
 

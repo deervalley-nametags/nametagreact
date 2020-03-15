@@ -86,7 +86,13 @@ function StatusPage(props){
             comments: "",
             datefinished: 0,
             daterequest: 0,
-            reqDaysAgo: 0
+            reqDaysAgo: 0,
+            attachment: "",
+            signColor: "White / Green",
+            signQuantity: 1,
+            height: 1,
+            width: 1,
+            thickness: ""
         }
     }]);
 
@@ -249,7 +255,7 @@ function StatusPage(props){
 
 
     useEffect(() => {
-        console.log(dataRow);
+        //console.log(dataRow);
     },[dataRow]);
 
 
@@ -434,7 +440,7 @@ function StatusPage(props){
                                     <CreatePreviewImage data={{ 
                                         name: mapItem.data.name,
                                         colorCode: 5,
-                                        signColor: "white-green",
+                                        signColor: mapItem.data.signcolor,
                                         attachment: mapItem.data.attachment,
                                         height: mapItem.data.height,
                                         width: mapItem.data.width
@@ -450,7 +456,10 @@ function StatusPage(props){
                                 <p className="status-b-col-text">Requested: { grabDaysAgo(mapItem.data.daterequest) } Days Ago</p>
                             </Row>
                             <Row>
-                            <p className="status-b-col-text">Quantity: { mapItem.data.quantity }</p>
+                                {
+                                    (mapItem.data.color !== 5) &&
+                                    <p className="status-b-col-text">Quantity: { mapItem.data.quantity }</p>
+                                }
                             </Row>
                             <Row>
                                 <p className="status-b-col-text">Comments: { mapItem.data.comments }</p>
