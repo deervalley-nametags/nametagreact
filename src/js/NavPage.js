@@ -10,6 +10,9 @@ function NavPage() {
                 <h3 id="banner-h3">
                     Deer Valley Nametags
                 </h3>
+                <p id="under-banner">
+                    Empire Signshop
+                </p>
                 <NavLink to="/admin">
                     <Button id="admin-login-button">
 

@@ -19,10 +19,20 @@ a:hover{
 #banner-h3{
     color: white;
     font-size: 45px;
+    text-shadow: 1px 1px 2px black;
     margin-top: 0px;
     position: absolute;
     top: 0px;
     font-weight: 500;
+}
+#under-banner{
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    font-size: 25px;
+    position: absolute;
+    top: 45px;
+    font-weight: 500;
+    margin-top: 0px;
 }
 #admin-login-button{
     background-color: rgba(0, 0, 0, 0.0);

@@ -11,66 +11,44 @@ import {
 } from "react-router-dom";
 
 function HomePage() {
-    //here is where we list out the starting tags, data format first
+    // here is where we list out the starting tags, data format first
     const startingTags = [{
         colorCode: 1,
-        name: "Name",
-        secondLine: "Title"
-    },{
-        colorCode: 1,
-        name: "Name",
-        secondLine: "City, ST"
-    },{
-        colorCode: 1,
-        name: "Name",
-        secondLine: "Title",
-        thirdLine: "Department"
+        name: "Green Tag",
+        secondLine: "Indoor",
+        thirdLine: "3rd Line Optional"
     },{
         colorCode: 2,
-        name: "Name",
-        secondLine: "Title"
-    },{
-        colorCode: 2,
-        name: "Name",
-        secondLine: "City, ST"
-    },{
-        colorCode: 2,
-        name: "Name",
-        secondLine: "Title",
-        thirdLine: "Department"
+        name: "Green Tag Deerhead",
+        secondLine: "Indoor",
+        thirdLine: "3rd Line Optional"
     },{
         colorCode: 3,
-        name: "Name",
-        secondLine: "Title"
-    },{
-        colorCode: 3,
-        name: "Name",
-        secondLine: "City, ST"
-    },{
-        colorCode: 3,
-        name: "Name",
-        secondLine: "Title",
-        thirdLine: "Department"
+        name: "Bronze Tag",
+        secondLine: "Lodges, etc.",
+        thirdLine: "3rd Line Optional"
     },{
         colorCode: 4,
-        name: "Name",
-        secondLine: "Title"
+        name: "Outdoor Tag",
+        secondLine: "Regular Black, Mtn Ops, etc.",
+        thirdLine: "3rd Line Optional"
     },{
-        colorCode: 4,
-        name: "Name",
-        secondLine: "City, ST"
+        colorCode: 12,
+        name: "Outdoor Ski Patrol",
+        secondLine: "Ski Patrol Only",
+        thirdLine: "3rd Line Optional"
     },{
-        colorCode: 4,
-        name: "Name",
-        secondLine: "Title",
-        thirdLine: "Department"
+        colorCode: 13,
+        name: "Old Black Card Tags",
+        secondLine: "Old Mtn Ops Uniforms",
+        thirdLine: "3rd Line Optional"
     },{
         colorCode: 11,
         name: "Ski / Basket Check",
         secondLine: "Click to Enter Details"
     },{
         colorCode: 5,
-        name: "Custom Sign\nClick to Enter Details",
+        name: "Custom Engraved Sign\nClick to Enter Details",
         signColor: "White / Blue",
         width: 7,
         height: 3

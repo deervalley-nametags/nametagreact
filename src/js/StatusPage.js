@@ -20,16 +20,16 @@ import '../css/tags.css';
 import '../css/admin.css';
 
 
-//compile time data, grab the date once, needs to be here due to scope
+// compile time data, grab the date once, needs to be here due to scope
 let date = new Date();
 let currentTimestamp = date.getTime();
 
 
-//lazy loads
+// lazy loads
 const CreatePreviewImage = lazy( () => import('./CreatePreviewImage.js'));
 
 
-//lazy load spinner
+// lazy load spinner
 const renderLoader = (
     <Spinner variant="danger" animation="border" role="status">
       <span className="sr-only">
@@ -39,9 +39,9 @@ const renderLoader = (
   );
 
 
-//getting amount of days ago from current to requested date
+// getting amount of days ago from current to requested date
 const grabDaysAgo = ((requestTimestamp) => {
-    //then for each item in data row, grab and assign the following
+    // then for each item in data row, grab and assign the following
     let reqDaysAgo = (currentTimestamp - requestTimestamp) / 8640000;
     reqDaysAgo = Math.round(reqDaysAgo) / 10;
 
@@ -49,18 +49,18 @@ const grabDaysAgo = ((requestTimestamp) => {
 });
 
 
-//getting status class and accompanying text
+// getting status class and accompanying text
 const grabStatus = (dateFinished => {
     let returnObj = {};
     if(dateFinished === 0){
-        //date finished is 0 which means unfinished
+        // date finished is 0 which means unfinished
         returnObj.text = "Still Working...";
         returnObj.class = "status-yellow";
         return returnObj;
     }else{
-        //date not 0, which means done, so get how many days ago done
+        // date not 0, which means done, so get how many days ago done
 
-        //how many days ago?
+        // how many days ago?
         let finDaysAgo = (currentTimestamp - dateFinished) / 8640000;
         finDaysAgo = Math.round(finDaysAgo) / 10;
 
@@ -75,10 +75,10 @@ const grabStatus = (dateFinished => {
 
 
 function StatusPage(props){
-    //debug: props.adminMode is true or false, props.dataRowAdmin would be the dataRowAdmin
-    //console.log(props);
+    // debug: props.adminMode is true or false, props.dataRowAdmin would be the dataRowAdmin
+    // console.log(props);
 
-    //tag rows of data, these MUST be filled with the data type or else it will freak out
+    // tag rows of data, these MUST be filled with the data type or else it will freak out
     const[dataRow, setDataRow] = useState([{
         id: 0,
         data: {
@@ -96,90 +96,90 @@ function StatusPage(props){
         }
     }]);
 
-    //this is to show and hide a load spinner, for some reason suspense isn't working with the tags not showing up
+    // this is to show and hide a load spinner, for some reason suspense isn't working with the tags not showing up
     const[showPage, setShowPage] = useState(false);
 
-    //display all tags system done tag
+    // display all tags system done tag
     const[tagsAreDone, setTagsAreDone] = useState(false);
 
-    //search value
+    // search value
     const[searchValue, setSearchValue] = useState("");
 
-    //container width padding, empty for normal mode, "px-0" for admin mode
+    // container width padding, empty for normal mode, "px-0" for admin mode
     const[adminPadding, setAdminPadding] = useState("");
 
-    //h4 title
+    // h4 title
     const[h4Title, setH4Title] = useState("STATUS for UNFINISHED TAGS:");
 
-    //search bar placeholder
+    // search bar placeholder
     const[searchBarPlaceholder, setSearchBarPlaceholder] = useState("Search Already Ordered Tags");
 
-    //function for done or undo button clicked, only on admin page
+    // function for done or undo button clicked, only on admin page
     const tagsNeedUpdate = () => {
-        //immediately set the loader
+        // immediately set the loader
         setShowPage(false);
         
 
-        //check if something was searched
+        // check if something was searched
         if(searchValue === ""){
-            //empty string means no search query, so just read all mode
+            // empty string means no search query, so just read all mode
 
-            //read everything again
+            // read everything again
             dbUtility({
                 mode: "read_all"
             })
             .then((statusTags) => {
-                //debug: this is what the promise resolved from in dbUtility()
-                //console.log(statusTags);
+                // debug: this is what the promise resolved from in dbUtility()
+                // console.log(statusTags);
 
-                //setDataRow to the value of the db read
+                // setDataRow to the value of the db read
                 setDataRow(statusTags);
                 
 
-                //if statusTags are empty, set the tags to show
+                // if statusTags are empty, set the tags to show
                 if(statusTags.length === 0){
                     setTagsAreDone(true);
                 }
 
-                //hide manual non suspense spinner
+                // hide manual non suspense spinner
                 setShowPage(true);
 
-                //update lift state up for admin page
+                // update lift state up for admin page
                 props.setDataRowAdmin(statusTags);
             });
             
         }else{
-            //anything else means search query, so search for mode
-            //console.log(searchValue);
+            // anything else means search query, so search for mode
+            // console.log(searchValue);
 
-            //immediately show loader spinner
+            // immediately show loader spinner
             setH4Title(renderLoader);
 
-            //this is only for the admin page
+            // this is only for the admin page
             dbUtility({
                 mode: "read_all"
             })
             .then((statusTags) => {
-                //update lift state up for admin page
+                // update lift state up for admin page
                 props.setDataRowAdmin(statusTags);
 
             })
             .then(() => {
 
-                //this is for the status page, but only when it is on admin mode
+                // this is for the status page, but only when it is on admin mode
                 dbUtility({
                     mode: "search_for",
                     searchForString: searchValue
                 }).then((returnResult) => {
-                    //returnResult is an array of documents that match
+                    // returnResult is an array of documents that match
                     setDataRow(returnResult);
     
                     
                 }).then(() => {
-                    //show result
+                    // show result
                     setShowPage(true);
 
-                    //immediately show loader spinner
+                    // immediately show loader spinner
                     setH4Title("Results for: " + searchValue);
                 });
             });
@@ -190,62 +190,62 @@ function StatusPage(props){
     };
 
 
-    //run once only on mount
+    // run once only on mount
     useEffect(() => {
         
 
-        //grab all the unfinished tags using dbUtility promise
+        // grab all the unfinished tags using dbUtility promise
         dbUtility({
             mode: "read_all"
         })
         .then((statusTags) => {
-            //debug: this is what the promise resolved from in dbUtility()
-            //console.log(statusTags);
+            // debug: this is what the promise resolved from in dbUtility()
+            // console.log(statusTags);
 
-            //setDataRow to the value of the db read
-            //a console.log here will NOT work!
+            // setDataRow to the value of the db read
+            // a console.log here will NOT work!
             setDataRow(statusTags);
 
-            //if statusTags are empty, set the tags to show
+            // if statusTags are empty, set the tags to show
             if(statusTags.length === 0){
                 setTagsAreDone(true);
             }
 
-            //hide manual non suspense spinner
+            // hide manual non suspense spinner
             setShowPage(true);
         });
     },[]);
 
-    //run when dataRowAdmin updates
+    // run when dataRowAdmin updates
     useEffect(() => {
-        //debug: did passing state down work?
-        //console.log("456");
+        // debug: did passing state down work?
+        // console.log("456");
 
-        //now update itself to reflect changes
+        // now update itself to reflect changes
         dbUtility({
             mode: "read_all"
         })
         .then((statusTags) => {
-            //debug: this is what the promise resolved from in dbUtility()
-            //console.log(statusTags);
+            // debug: this is what the promise resolved from in dbUtility()
+            // console.log(statusTags);
 
-            //setDataRow to the value of the db read
-            //a console.log here will NOT work!
+            // setDataRow to the value of the db read
+            // a console.log here will NOT work!
             setDataRow(statusTags);
 
-            //if statusTags are empty, set the tags to show
+            // if statusTags are empty, set the tags to show
             if(statusTags.length === 0){
                 setTagsAreDone(true);
             }
 
-            //hide manual non suspense spinner
+            // hide manual non suspense spinner
             setShowPage(true);
         });
     },[props.dataRowAdmin]);
 
 
     useEffect(() => {
-        //set h4 title and search bar placeholder on adminmode
+        // set h4 title and search bar placeholder on adminmode
         if(props.adminMode){
             setH4Title("Edit Individual Tag Status");
             setSearchBarPlaceholder("Search for Specific Tags");
@@ -255,11 +255,11 @@ function StatusPage(props){
 
 
     useEffect(() => {
-        //console.log(dataRow);
+        // console.log(dataRow);
     },[dataRow]);
 
 
-    //return
+    // return
     return (
         <Container className={ adminPadding }>
             <Row className="justify-content-between mt-1 nav-h4-bar-bg print-hide">
@@ -285,57 +285,57 @@ function StatusPage(props){
                         aria-label="Search"
                         aria-describedby="basic-addon1"
                         onChange={ (e) => {
-                            //on value change set searchValue to string
+                            // on value change set searchValue to string
                             let thisSearchValue = e.target.value;
 
-                            //lower casify it
+                            // lower casify it
                             thisSearchValue = thisSearchValue.toLowerCase();
 
                             setSearchValue(thisSearchValue);
                         }}
                         onKeyPress={ (e) => {
                             if(e.key === 'Enter'){
-                                //if enter was pressed
-                                //console.log(searchValue);
+                                // if enter was pressed
+                                // console.log(searchValue);
 
-                                //if search value is empty, reset
+                                // if search value is empty, reset
                                 if(searchValue === ""){
-                                    //set the h4 title
+                                    // set the h4 title
                                     setH4Title("Edit Individual Tag Status");
 
                                     dbUtility({
                                         mode: "read_all"
                                     })
                                     .then((statusTags) => {
-                                        //debug: this is what the promise resolved from in dbUtility()
-                                        //console.log(statusTags);
+                                        // debug: this is what the promise resolved from in dbUtility()
+                                        // console.log(statusTags);
                             
-                                        //setDataRow to the value of the db read
-                                        //a console.log here will NOT work!
+                                        // setDataRow to the value of the db read
+                                        // a console.log here will NOT work!
                                         setDataRow(statusTags);
                             
-                                        //if statusTags are empty, set the tags to show
+                                        // if statusTags are empty, set the tags to show
                                         if(statusTags.length === 0){
                                             setTagsAreDone(true);
                                         }
                             
-                                        //hide manual non suspense spinner
+                                        // hide manual non suspense spinner
                                         setShowPage(true);
                                     });
                                 }else{
-                                    //immediately show loader spinner
+                                    // immediately show loader spinner
                                     setH4Title(renderLoader);
     
     
-                                    //search using dbUtility
+                                    // search using dbUtility
                                     dbUtility({
                                         mode: "search_for",
                                         searchForString: searchValue
                                     }).then((returnResult) => {
-                                        //returnResult is an array of documents that match
+                                        // returnResult is an array of documents that match
                                         setDataRow(returnResult);
     
-                                        //set the h4 title
+                                        // set the h4 title
                                         setH4Title("Results for: " + searchValue);
                                     });
                                 };
@@ -367,7 +367,7 @@ function StatusPage(props){
                     <Row className="mt-1 justify-content-between status-row" key={ "status-" + mapItem.id }>
                         {
                             props.adminMode &&
-                            <Col xs={ 1 } className="px-0">
+                            <Col xs={ 12 } md={ 1 } className="px-0">
                                 <Row className="justify-content-center mt-1">
                                     <Col xs="auto">
                                         <Button 
@@ -377,7 +377,7 @@ function StatusPage(props){
                                                 grabStatus(mapItem.data.datefinished).class === "status-green" ? true : false 
                                             }
                                             onClick={ () => {
-                                                //update the entry with DONE
+                                                // update the entry with DONE
                                                 let tempIdArray = [];
                                                 tempIdArray.push(mapItem.id);
                                                 dbUtility({
@@ -385,7 +385,7 @@ function StatusPage(props){
                                                     type: "done",
                                                     docIdArray: tempIdArray
                                                 }).then(() => {
-                                                    //somehow need to re-update
+                                                    // somehow need to re-update
 
                                                     tagsNeedUpdate();
                                                 });
@@ -403,18 +403,18 @@ function StatusPage(props){
                                             grabStatus(mapItem.data.datefinished).class === "status-yellow" ? true : false 
                                         }
                                         onClick={ () => {
-                                            //debug: grab id of item clicked on
-                                            //console.log(mapItem.id);
+                                            // debug: grab id of item clicked on
+                                            // console.log(mapItem.id);
                                             let tempIdArray = [];
                                             tempIdArray.push(mapItem.id);
 
-                                            //update the entry with UNDO / notdone
+                                            // update the entry with UNDO / notdone
                                             dbUtility({
                                                 mode: "update_entry",
                                                 type: "notdone",
                                                 docIdArray: tempIdArray
                                             }).then(() => {
-                                                //somehow need to re-update
+                                                // somehow need to re-update
                                                 tagsNeedUpdate();
                                             });
                                         }}>
@@ -424,7 +424,7 @@ function StatusPage(props){
                                 </Row>
                             </Col>
                         }
-                        <Col xs={ props.adminMode ? 5 : 6 } className="px-0">
+                        <Col xs={ 12 } md={ props.adminMode ? 5 : 6 } className="px-0">
                             <Suspense fallback={ renderLoader }>
                                 {
                                     (mapItem.data.color !== 5) &&
@@ -448,24 +448,32 @@ function StatusPage(props){
                                 }
                             </Suspense>
                         </Col>
-                        <Col xs={ 4 } className="px-0">
+                        <Col xs={ 12 } md={ 4 } className="px-0">
                             <Row>
-                                <p className="status-b-col-text">Requestor: { mapItem.data.requestor }</p>
+                                <Col>
+                                    <p className="status-b-col-text">Requestor: { mapItem.data.requestor }</p>
+                                </Col>
                             </Row>
                             <Row>
-                                <p className="status-b-col-text">Requested: { grabDaysAgo(mapItem.data.daterequest) } Days Ago</p>
+                                <Col>
+                                    <p className="status-b-col-text">Requested: { grabDaysAgo(mapItem.data.daterequest) } Days Ago</p>
+                                </Col>
                             </Row>
                             <Row>
-                                {
-                                    (mapItem.data.color !== 5) &&
-                                    <p className="status-b-col-text">Quantity: { mapItem.data.quantity }</p>
-                                }
+                                <Col>
+                                    {
+                                        (mapItem.data.color !== 5) &&
+                                        <p className="status-b-col-text">Quantity: { mapItem.data.quantity }</p>
+                                    }
+                                </Col>
                             </Row>
                             <Row>
-                                <p className="status-b-col-text">Comments: { mapItem.data.comments }</p>
+                                <Col>
+                                    <p className="status-b-col-text">Comments: { mapItem.data.comments }</p>
+                                </Col>
                             </Row>
                         </Col>
-                        <Col xs={ 2 } className={ grabStatus(mapItem.data.datefinished).class }>
+                        <Col xs={ 12 } md={ 2 } className={ grabStatus(mapItem.data.datefinished).class }>
                             <p>STATUS: { grabStatus(mapItem.data.datefinished).text }</p>
                         </Col>
                     </Row>

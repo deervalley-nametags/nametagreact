@@ -80,6 +80,16 @@
     background-repeat: no-repeat;
     background-size: cover;
 }
+.dvpatrol-img{
+    background-image: url(../img/dvpatrol60.png);
+    height: 60px;
+    min-width: 60px;
+    position: relative;
+    left: 5px;
+    margin-top:10px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
 .tag-bronze{
     width: 270px;
     height: 90px;
@@ -103,6 +113,26 @@
     border-radius: 10px;
     border: 1px solid #ccc;
     color: white;
+    font-size: 50px;
+    padding-top: 10px;
+}
+.tag-oldoutdoor{
+    width: 270px;
+    height: 120px;
+    background-color: black;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    color: white;
+    font-size: 50px;
+    padding-top: 10px;
+}
+.tag-patrol{
+    width: 270px;
+    height: 120px;
+    background-color: white;
+    border-radius: 10px;
+    border: 3px solid black;
+    color: black;
     font-size: 50px;
     padding-top: 10px;
 }

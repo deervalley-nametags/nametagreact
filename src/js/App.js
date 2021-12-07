@@ -13,7 +13,7 @@ import {
 import 'bootstrap/dist/css/bootstrap.min.css';
 import PrintProvider from 'react-easy-print';
 
-//lazy imports
+// lazy imports
 const HomePage = lazy( () => import('./HomePage.js'));
 const StatusPage = lazy( () => import('./StatusPage.js'));
 const AdminPage = lazy( () => import('./AdminPage.js'));
@@ -21,7 +21,7 @@ const CustomSignPage = lazy( () => import('./CustomSignPage.js'));
 const CreateTagPage = lazy( () => import('./CreateTagPage.js'));
 const CreateMultiTagPage = lazy( () => import('./CreateMultiTagPage.js'));
 
-//lazy load spinner
+// lazy load spinner
 const renderLoader = (
   <Spinner variant="danger" animation="border" role="status">
     <span className="sr-only">
@@ -30,7 +30,7 @@ const renderLoader = (
   </Spinner>
 );
 
-//start main app: mainly routing
+// start main app: mainly routing
 function App() {
   return (
     <PrintProvider>

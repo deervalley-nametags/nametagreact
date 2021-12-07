@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, NavLink } from "react-router-dom";
 
-//layout import
+// layout import
 import { 
     Container, 
     Button,
@@ -14,20 +14,20 @@ import {
 import '../css/nav.css';
 import '../css/signcolor.css';
 
-//utility import
+// utility import
 import CreateSignColor from './CreateSignColor.js';
 import CreatePreviewImage from './CreatePreviewImage.js';
 import { textValidation } from './textValidation.js';
 import { dbUtility } from './dbUtility.js';
 
 
-//start page
+// start page
 const CustomSignPage = () => {
-    //this is to be able to load status window when tag created
+    // this is to be able to load status window when tag created
     let history = useHistory();
     
 
-    //set the submit array(same data format as multi tag) to default values
+    // set the submit array(same data format as multi tag) to default values
     const[ submitArray, setSubmitArray ] = useState([{
         color: 5,
         requestor: "",
@@ -42,7 +42,7 @@ const CustomSignPage = () => {
     }]);
 
 
-    //set the sign color data
+    // set the sign color data
     const signColorData = [{
         color: "white",
         bg: "green",
@@ -90,41 +90,41 @@ const CustomSignPage = () => {
     }];
 
 
-    //submit button on request
+    // submit button on request
     const submitRequest = () => {
-        //check to make sure user hasn't done in-browser html magic to bypass disabled submit button
-        //an empty or invalid request
+        // check to make sure user hasn't done in-browser html magic to bypass disabled submit button
+        // an empty or invalid request
         if(submitGrey === false){
-            //pass, as its unlikely to change a react page variable in browser unless superuser
+            // pass, as its unlikely to change a react page variable in browser unless superuser
 
-            //change status text to loading
+            // change status text to loading
             setStatusTextIndex(3);
 
-            //db new entry
+            // db new entry
             dbUtility({
                 mode: "new_entry",
                 writeData: submitArray
             }).then(function(statusBack){
-                //console.log(statusBack)
-                //on success, navigate to /status
+                // console.log(statusBack)
+                // on success, navigate to /status
                 history.push("/status");
             });
         }else{
-            //failed, this shouldn't happen though
+            // failed, this shouldn't happen though
         };
     }
 
     /*
-    //debug: what is submitArray on update
+    // debug: what is submitArray on update
     useEffect(() => {
         console.log(submitArray);
     },[submitArray]);
     */
 
-    //modify one element of the array
+    // modify one element of the array
     const modifySubmitArray = (property, value, validation) => {
-        //console.log(validation);
-        //text validate if it wants it
+        // console.log(validation);
+        // text validate if it wants it
         let validatedText;
         if(validation){
             validatedText = textValidation(value, 3);
@@ -132,46 +132,46 @@ const CustomSignPage = () => {
             validatedText = value;
         }
 
-        //grab prior values except for changed element
+        // grab prior values except for changed element
         let priorSubmitObj = submitArray[0];
         priorSubmitObj[property] = validatedText;
         setSubmitArray([priorSubmitObj]);
     };
 
 
-    //update the status text and disable/enable button
+    // update the status text and disable/enable button
     useEffect(() => {
-        //also update the submission status, e.g. you need X or Y to submit
-        //if empty string or 0
+        // also update the submission status, e.g. you need X or Y to submit
+        // if empty string or 0
         if(submitArray[0].name === "" && submitArray[0].requestor === ""){
-            //false due to name AND requestor
+            // false due to name AND requestor
             setSubmitGrey(true);
             setStatusTextIndex(0);
         }else if(submitArray[0].name === ""){
-            //false only to name
+            // false only to name
             setSubmitGrey(true);
             setStatusTextIndex(2);
         }else if(submitArray[0].requestor === ""){
-            //false only to requestor
+            // false only to requestor
             setSubmitGrey(true);
             setStatusTextIndex(1);
         }else if(submitArray[0].name !== "" && submitArray[0].requestor !== ""){
-            //true only if name AND requestor are not empty strings set from textValidation
+            // true only if name AND requestor are not empty strings set from textValidation
             setSubmitGrey(false);
             setStatusTextIndex(4);
         }else{
-            //some other condition
+            // some other condition
             console.log("updateSubmitGrey() ran into some other condition on validation!");
         };
 
-        //console.log(submitArray);
+        // console.log(submitArray);
 
     },[submitArray]);
 
 
-    //submit grey button text and status text
+    // submit grey button text and status text
     const[ submitGrey, setSubmitGrey ] = useState(true);
-    //for the status text, only the index of it changes, not the actual string [4] is empty string
+    // for the status text, only the index of it changes, not the actual string [4] is empty string
     const statusText = [
         "There must be a requestor, Sign Content must be at least 3 characters.",
         "There must be a requestor.",
@@ -181,11 +181,11 @@ const CustomSignPage = () => {
     ];
     const[ statusTextIndex, setStatusTextIndex ] = useState(0);
 
-    //setting layout sizes
+    // setting layout sizes
     const xsSize = 12;
     const mdSize = 6;
 
-    //return
+    // return
     return (
         <Container>
             <Row className="justify-content-between nav-h4-bar-bg">
