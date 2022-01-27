@@ -1,6 +1,7 @@
-export function textValidation(inputString, minChar){
+export function textValidation(inputString, minChar, strictMode){
     //this will automatically convert input text and return with validated text
     //console.log("textValidation called with: " + inputString);
+    //console.log(strictMode);
 
     /*
     //check undefined
@@ -17,7 +18,7 @@ export function textValidation(inputString, minChar){
 
     //1st step: check all the string to make sure it has no special characters
     //this is for db security purposes, only 0-9, a-Z, and !@.,?
-    let outputString = regexDelete(inputString);
+    let outputString = regexDelete(inputString, strictMode);
 
     //1st and half step: check and cut short if string is under the minimum character limit
     let stringLength = inputString.length;
@@ -39,14 +40,26 @@ export function textValidation(inputString, minChar){
     return outputString;
 };
 
-function regexDelete(string){
+function regexDelete(string, strictMode){
+    // check if strict mode enabled, set regex accordingly
+
+    let regex;
+    if(strictMode !== undefined || strictMode === true){
+        // restricted name version
+        regex = /\w|\n|\r|\t|\d|[,@ /&"']|[A-Za-zÀ-ÖØ-öø-ÿ]/g;
+        //console.log("strict");
+    }else{
+        // regular unrestricted version
+        regex = /\w|\n|\r|\t|\d|[.!,?@ /&*()#$%-=+"']|[A-Za-zÀ-ÖØ-öø-ÿ]/g; // old: /\w|\n|\r|\t|\d|[.!,?@ ]/g, it did not allow accented characters nor /&'"()#$%
+        //console.log("non-strict");
+    };
+
     //check if string is empty
     if(string===""){
         //if empty, do nothing
         return "";
     }else{
         //check an entire string for valid characters, then return only those
-        const regex = /\w|\n|\r|\t|\d|[.!,?@ ]|[A-Za-zÀ-ÖØ-öø-ÿ]/g; // old: /\w|\n|\r|\t|\d|[.!,?@ ]/g, it did not allow accented characters
         let found = string.match(regex);
 
         //because it returns an array of all the characters, need to compile them into
@@ -123,16 +136,20 @@ function titleCapsify(inputString){
 };
 
 function stateToAbbv(inputString){
-    //compile a list of all state names
-    const stateFull = ["Alabama", "Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
-    const stateAbbv = ["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
-    const stateAbbvTitleCaps = ["Al","Ak","Az","Ar","Ca","Co","Ct","De","Dc","Fl","Ga","Hi","Id","Il","In","Ia","Ks","Ky","La","Me","Md","Ma","Mi","Mn","Ms","Mo","Mt","Ne","Nv","Nh","Nj","Nm","Ny","Nc","Nd","Oh","Ok","Or","Pa","Ri","Sc","Sd","Tn","Tx","Ut","Vt","Va","Wa","Wv","Wi","Wy"];
+    //compile a list of all state names, but not Georgia since that could be the country, so don't correct it
+    const stateFull = ["Alabama", "Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","District of Columbia","Florida","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Carolina","North Dakota","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"];
+    const stateAbbv = ["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
+    const stateAbbvTitleCaps = ["Al","Ak","Az","Ar","Ca","Co","Ct","De","Dc","Fl","Hi","Id","Il","In","Ia","Ks","Ky","La","Me","Md","Ma","Mi","Mn","Ms","Mo","Mt","Ne","Nv","Nh","Nj","Nm","Ny","Nc","Nd","Oh","Ok","Or","Pa","Ri","Sc","Sd","Tn","Tx","Ut","Vt","Va","Wa","Wv","Wi","Wy"];
     //console.log(stateFull.length); //stateAbbvTitleCaps is just for searching purposes
 
     //split and grab the 2nd item in array, check to see if its a state name
     let splitString = inputString.split(",");
-
-
+    
+    // sometimes there is an escape \r, so regex it out so it can properly validate multi tag excel inputs
+    let lastIndex = splitString.length - 1;
+    splitString[lastIndex] = splitString[lastIndex].replace(/(\r\n|\n|\r)/gm, "");
+    //console.log(splitString);
+    
     //get rid of the first character which is a space thanks to add comma spaces
     //only if splitString[1] exists
     let splicedString;

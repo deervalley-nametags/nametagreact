@@ -32,6 +32,9 @@ const renderLoader = (
 
 // start main app: mainly routing
 function App() {
+  
+
+
   return (
     <PrintProvider>
     <Router>

@@ -34,18 +34,26 @@ function loginAs(user, pass){
     });
 };
 
-function checkAuth(){
+function checkAuth(silenceMode){
     // check auth
     return new Promise((resolve, reject) => {
         firebase.auth().onAuthStateChanged(function(user) {
             if(user){
                 //  User is signed in.
-                console.log("checkAuth() passed with user: " + user.email);
+                if(silenceMode){
+                    // do nothing
+                }else{
+                    console.log("checkAuth() passed with user: " + user.email);
+                };
         
                 resolve(user.email);
             }else{
                 //  No user is signed in.
-                console.log("checkAuth() failed: no credentials.");
+                if(silenceMode){
+                    // do nothing
+                }else{
+                    console.log("checkAuth() failed: no credentials.");
+                };
             };
         });
 
@@ -214,6 +222,57 @@ export function dbUtility(utilityObj){
                 });
             });
         });
+    }else if(utilityObj.mode === "get_app_version"){
+        // search for appVersion in first line, and grab the number ("70010") in the second line
+        let promiseReturn = [];
+
+        // return promise
+        return new Promise((resolve, reject) => {
+            // check auth before getting doc data
+            checkAuth(true).then(function(){
+                // grab results where name is being searched for
+                namesRef.where("namearray", "array-contains-any", ["appversion"]).get().then(function(querySnapshot){
+                    querySnapshot.forEach(function(doc){
+                        // for each document found, array push the following
+                        promiseReturn.push({
+                            id: doc.id,
+                            data: doc.data()
+                        });
+                    });
+                    
+                    resolve(promiseReturn[0].data.titlecity);
+                });
+            });
+        });
+    }else if(utilityObj.mode === "set_app_version"){
+        let promiseReturn = [];
+        
+        // return promise
+        return new Promise((resolve, reject) => {
+            // check auth before getting doc data
+            checkAuth(true).then(function(){
+                namesRef.where("namearray", "array-contains-any", ["appversion"]).get().then(function(querySnapshot){
+                    // read the doc id with name "appversion"
+                    querySnapshot.forEach(function(doc){
+                        // for each document found, array push the following
+                        promiseReturn.push({
+                            id: doc.id,
+                            data: doc.data()
+                        });
+                    });
+
+                    // "AppVersion" doc id to update with
+                    namesRef.doc(promiseReturn[0].id).update({
+                        titlecity: utilityObj.version
+                    }).then(function(){
+                        console.log("Overwrote version to " + utilityObj.version);
+                    });
+                    
+                    resolve();
+                });
+
+            });
+        });
     }else if(utilityObj.mode === "new_entry"){
         /*
         used for new entries
@@ -320,6 +379,9 @@ export function dbUtility(utilityObj){
             }else if(utilityObj.type === "notdone"){
                 // update to not done, aka undo
                 currentTimestamp = 0;
+            }else if(utilityObj.type === "duplicate"){
+                // update to duplicate entry
+                currentTimestamp = -1;
             }else{
                 // mode not supported
             }

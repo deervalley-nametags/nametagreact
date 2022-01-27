@@ -32,72 +32,87 @@ function colorCodeToClass(colorCode){
                 
         // 1: green pin no deerhead(normal nametag and default selection)
         tagType.bg = "tag-green";
-    } else if(colorCode === 2){
+    }else if(colorCode === 2){
 
         // 2: green magnet deerhead
         tagType.bg = "tag-greenmag";
         tagType.img = "dvgold-img";
-    } else if(colorCode === 3){
+    }else if(colorCode === 3){
 
         // 3: bronze magnet engraved deerhead
         tagType.bg = "tag-bronze";
-        tagType.img = "dvwhite-img";
-    } else if(colorCode === 4){
+        tagType.img = "dvblack-img";
+    }else if(colorCode === 4){
 
         // 4: outdoor tags
         tagType.bg = "tag-outdoor";
         tagType.img = "dvwhite-img";
         tagType.quantity = "x3";
-    } else if(colorCode === 5){
+    }else if(colorCode === 5){
 
         // 5: sign, add details in comments
         tagType.bg = "tag-sign";
         tagType.defName = "Sign";
         tagType.defSecond = "Put details in the comments";
         tagType.quantity = "";
-    } else if(colorCode === 7){
+    }else if(colorCode === 7){
 
         // 7: repeat 1 but with title instead of city, st
         tagType.bg = "tag-green";
         tagType.defSecond = "Title";
-    } else if(colorCode === 8){
+    }else if(colorCode === 8){
 
         // 8: repeat 2 but with title instead of city, st
         tagType.bg = "tag-greenmag";
         tagType.img = "dvgold-img";
         tagType.defSecond = "Title";
-    } else if(colorCode === 9){
+    }else if(colorCode === 9){
 
         // 9: repeat 3 but with title instead of city, st
         tagType.bg = "tag-bronze";
         tagType.img = "dvwhite-img";
         tagType.defSecond = "Title";
-    } else if(colorCode === 10){
+    }else if(colorCode === 10){
 
         // 10: repeat 4 but with title instead of city, st
         tagType.bg = "tag-outdoor";
         tagType.defSecond = "Title";
         tagType.quantity = "x3";
-    } else if(colorCode === 11){
+    }else if(colorCode === 11){
 
         // 11: basket check tag
         tagType.bg = "tag-basket";
         tagType.defName = "<p style='font-size:60px;position:relative;top:-20%;'>&#8226;</p>";
         tagType.defSecond = "<p style='font-size:19px;position:relative;bottom:30%;'>Basket Check</p>";
         tagType.quantity = "";
-    } else if(colorCode === 12){
+    }else if(colorCode === 12){
 
         // 12: outdoor tag for ski patrol
         tagType.bg = "tag-patrol";
         tagType.img = "dvpatrol-img";
         tagType.quantity = "x3";
-    } else if(colorCode === 13){
+    }else if(colorCode === 13){
 
         // 13: old outdoor tags that fit inside old mtn ops uniforms
         tagType.bg = "tag-oldoutdoor";
         tagType.quantity = "x3";
-    }else if(colorCode === 11){
+    }else if(colorCode === 14){
 
+        // 14: black diamond tags
+        tagType.bg = "tag-blackdiamond";
+        tagType.img = "dvblackdiamond-img";
+        tagType.quantity = "x2";
+    }else if(colorCode === 15){
+
+        // 15: regular black indoor
+        tagType.bg = "tag-black";
+        tagType.quantity = "x2";
+    }else if(colorCode === 16){
+
+        // 16: club 1981 -- blk text, silver bg
+        tagType.bg = "tag-blackdiamond";
+        tagType.img = "dvclub-img";
+        tagType.quantity = "x2";
     }else{
 
         // anything else, other, details in comments

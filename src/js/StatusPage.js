@@ -20,9 +20,7 @@ import '../css/tags.css';
 import '../css/admin.css';
 
 
-// compile time data, grab the date once, needs to be here due to scope
-let date = new Date();
-let currentTimestamp = date.getTime();
+
 
 
 // lazy loads
@@ -41,11 +39,12 @@ const renderLoader = (
 
 // getting amount of days ago from current to requested date
 const grabDaysAgo = ((requestTimestamp) => {
+    // this was once a global thing, but it was having negative day errors when going live build
+    let currentTimestamp = Date.now();
+
     // then for each item in data row, grab and assign the following
     let reqDaysAgo = (currentTimestamp - requestTimestamp) / 8640000;
-    reqDaysAgo = Math.round(reqDaysAgo) / 10;
-
-    return reqDaysAgo;
+    return((Math.floor(reqDaysAgo)) / 10);
 });
 
 
@@ -57,7 +56,14 @@ const grabStatus = (dateFinished => {
         returnObj.text = "Still Working...";
         returnObj.class = "status-yellow";
         return returnObj;
+    }else if(dateFinished === -1){
+        // -1 indicates a marked for duplicate entry
+        returnObj.text = "Marked as Duplicate";
+        returnObj.class = "status-red";
+        return returnObj;
     }else{
+        let currentTimestamp = Date.now();
+        
         // date not 0, which means done, so get how many days ago done
 
         // how many days ago?
@@ -75,6 +81,35 @@ const grabStatus = (dateFinished => {
 
 
 function StatusPage(props){
+    // ---------- VERSION CONTROL ----------
+    const[latestVersion, setLatestVersion] = useState(-1);
+    useEffect(() => {
+        // database came back with version
+
+        // grab localStorage
+        let localVersion = localStorage.getItem("version");
+        localVersion = parseInt(localVersion);
+        if((localVersion !== latestVersion) && (latestVersion !== -1)){
+            console.log("wrong local version: " + localVersion + " of latest: " + latestVersion);
+            // if versions don't match(and it isn't the initial state of -1), force refresh
+            window.location.reload(true);
+            
+            // update local
+            localStorage.setItem("version", latestVersion);
+        }else if(localVersion === latestVersion){
+            console.log("running latest version");
+        };
+    },[latestVersion]);
+
+    // grab appversion from "appVersion" tag in database
+    dbUtility({
+        mode: "get_app_version"
+    }).then((appVersion) => {
+        appVersion = parseInt(appVersion);
+        setLatestVersion(appVersion);
+    });
+
+
     // debug: props.adminMode is true or false, props.dataRowAdmin would be the dataRowAdmin
     // console.log(props);
 
@@ -284,6 +319,7 @@ function StatusPage(props){
                         placeholder={ searchBarPlaceholder }
                         aria-label="Search"
                         aria-describedby="basic-addon1"
+                        id="status-search-bar-inner"
                         onChange={ (e) => {
                             // on value change set searchValue to string
                             let thisSearchValue = e.target.value;
@@ -332,6 +368,9 @@ function StatusPage(props){
                                         mode: "search_for",
                                         searchForString: searchValue
                                     }).then((returnResult) => {
+                                        // sort by not done first, so admin page is easier to match tags
+                                        console.log(returnResult);
+
                                         // returnResult is an array of documents that match
                                         setDataRow(returnResult);
     
@@ -391,6 +430,32 @@ function StatusPage(props){
                                                 });
                                             }}>
                                             &#10004;
+                                        </Button>
+                                    </Col>
+                                </Row>
+                                <Row className="justify-content-center mt-1">
+                                    <Col xs="auto">
+                                        <Button 
+                                            variant="danger" 
+                                            className="admin-change-status-button"
+                                            disabled={ 
+                                                grabStatus(mapItem.data.datefinished).class === "status-green" ? true : false 
+                                            }
+                                            onClick={ () => {
+                                                // update the entry with DONE
+                                                let tempIdArray = [];
+                                                tempIdArray.push(mapItem.id);
+                                                dbUtility({
+                                                    mode: "update_entry",
+                                                    type: "duplicate",
+                                                    docIdArray: tempIdArray
+                                                }).then(() => {
+                                                    // somehow need to re-update
+
+                                                    tagsNeedUpdate();
+                                                });
+                                            }}>
+                                            &#x2398;
                                         </Button>
                                     </Col>
                                 </Row>

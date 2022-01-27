@@ -13,7 +13,7 @@ import {
 } from 'react-bootstrap';
 import '../css/nav.css';
 import '../css/datasheet.css';
-import ExampleImg from '../img/excel4.png';
+import ExampleImg from '../img/excel5.png';
 
 //utility import
 import CreatePreviewImage from './CreatePreviewImage.js';
@@ -41,7 +41,7 @@ const CreateMultiTagPage = () => {
     //comments and requestor temp storage
     const[tempComments, setTempComments] = useState("");
     const[tempRequestor, setTempRequestor] = useState("");
-    const[tempQuantity, setTempQuantity] = useState((thisColorCode === 1) ? "2 PINS" : "2 MAGNETS");
+    const[tempQuantity, setTempQuantity] = useState((thisColorCode === 1) ? "2-PINS" : "2-MAGNETS");
     
 
     //set the submit array(same data format as multi tag) to default values
@@ -52,7 +52,7 @@ const CreateMultiTagPage = () => {
         thirdLine: "",
         requestor: "",
         comments: "",
-        quantity: (thisColorCode === 1) ? "2 PINS" : "2 MAGNETS",
+        quantity: (thisColorCode === 1) ? "2-PINS" : "2-MAGNETS",
     }]);
 
 
@@ -216,7 +216,7 @@ const CreateMultiTagPage = () => {
             <Row className="mt-3">
                 <InputGroup>
                     <FormControl
-                        placeholder="Requestor (or: WHO to Mail it to)"
+                        placeholder="Requestor's Name and Department"
                         aria-label="Requestor"
                         aria-describedby="basic-addon1"
                         onChange={ e => {
@@ -291,7 +291,7 @@ const CreateMultiTagPage = () => {
                                             //if checked is true
                                             if(e.target.checked){
                                                 //set value accordingly
-                                                setTempQuantity("2 PINS");
+                                                setTempQuantity("2-PINS");
                                             }
                                         }}
                                     />
@@ -314,7 +314,7 @@ const CreateMultiTagPage = () => {
                                             //if checked is true
                                             if(e.target.checked){
                                                 //set value accordingly
-                                                setTempQuantity("2 MAGNETS");
+                                                setTempQuantity("2-MAGNETS");
                                             }
                                         }}
                                     />
@@ -336,7 +336,7 @@ const CreateMultiTagPage = () => {
                                             //if checked is true
                                             if(e.target.checked){
                                                 //set value accordingly
-                                                setTempQuantity("1 PIN + 1 MAGNET");
+                                                setTempQuantity("1-PIN + 1-MAGNET");
                                             }
                                         }}
                                     />

@@ -32,6 +32,9 @@ function CreateSignColor(data) {
     11: engraved sign
     12: outdoor patrol white bg with black cross and border
     13: old mtn ops uniform black card tags
+    14: black diamond lodge silver
+    15: regular black indoor
+    16: club 1981 -- blk text, silver bg
     deprecated: 5, 6, 7, 8, 9
     */
     // console.log(data);

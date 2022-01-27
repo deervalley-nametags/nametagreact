@@ -45,6 +45,37 @@ function copyToClipboard(id){
 
 
 function AdminPage() {
+    // ---------- VERSION CONTROL ----------
+    const[latestVersion, setLatestVersion] = useState(-1);
+    useEffect(() => {
+        // database came back with version
+
+        // grab localStorage
+        let localVersion = localStorage.getItem("version");
+        localVersion = parseInt(localVersion);
+        if((localVersion !== latestVersion) && (latestVersion !== -1)){
+            console.log("wrong local version: " + localVersion + " of latest: " + latestVersion);
+            // if versions don't match(and it isn't the initial state of -1), force refresh
+            window.location.reload(true);
+            
+            // update local
+            localStorage.setItem("version", latestVersion);
+        }else if(localVersion === latestVersion){
+            console.log("running latest version");
+        };
+    },[latestVersion]);
+
+    // grab appversion from "appVersion" tag in database
+    dbUtility({
+        mode: "get_app_version"
+    }).then((appVersion) => {
+        appVersion = parseInt(appVersion);
+        setLatestVersion(appVersion);
+    });
+    //console.log("version check");
+
+
+
     // admin title label
     const[adminLabel, setAdminLabel] = useState("ADMIN LOGIN");
 
@@ -239,6 +270,19 @@ function AdminPage() {
         setAdminTodoTableData(dataByColor);
     },[dataRowAdmin]);
 
+    const adminIncrementVersion = (event) => {
+        if(event.key === 'Enter'){
+            let value = event.target.value;
+            //console.log(event.target.value);
+
+            dbUtility({
+                mode: "set_app_version",
+                version: value
+            }).then(function(){
+                setLatestVersion(value);
+            });
+        };
+    };
 
     // return
     return (
@@ -293,7 +337,7 @@ function AdminPage() {
                     </Col>
                 </Row>
             }
-            { 
+            {
                 // debug: change to !adminDisplay && for no-login testing, adminDisplay && for final
                 adminDisplay &&
                 <Container className="mt-2 mb-5 pb-4 px-4 admin-top-section">
@@ -499,6 +543,27 @@ function AdminPage() {
                 adminDisplay &&
                 <Container className="mx-0 pb-3 px-4 pt-3 admin-bottom-section">
                     <StatusPage adminMode={ true } dataRowAdmin={ dataRowAdmin } setDataRowAdmin={ setDataRowAdmin } />
+                </Container>
+            }
+            {
+                adminDisplay &&
+                <Container className="mt-2 mb-0 ml-2 pl-4 pb-0 pt-1">
+                    <Row>
+                    <Col xs="auto" className="mt-2 mr-3 p-0">
+                        <p>Current Version: { latestVersion }</p>
+                    </Col>
+                        <Col xs="auto" className="p-0">
+                            <InputGroup>
+                                <FormControl
+                                    placeholder="App Version Write-Over"
+                                    type="number"
+                                    aria-label="number"
+                                    aria-describedby="basic-addon1"
+                                    onKeyPress={ (e) => adminIncrementVersion(e) }
+                                />
+                            </InputGroup>
+                        </Col>
+                    </Row>
                 </Container>
             }
         </Container>

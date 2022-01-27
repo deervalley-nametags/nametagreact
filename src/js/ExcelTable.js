@@ -3,7 +3,7 @@ import {
     FormControl
 } from 'react-bootstrap';
 import '../css/datasheet.css';
-import { textValidation } from './textValidation';
+import { textValidation } from './textValidation.js';
 
 function ExcelTable(data) {
     /*
@@ -46,7 +46,7 @@ function ExcelTable(data) {
             let oldTableData = data.data;
 
             //text validation
-            let newValidatedValue = textValidation(e.target.value);
+            let newValidatedValue = textValidation(e.target.value, 3, true);
             
             //translate int X(0, 1, 2) to string object version(.name, .secondLine, .thirdLine)
             if(idX === 0){
@@ -179,7 +179,7 @@ function ExcelTable(data) {
         let oldTableData = data.data;
 
         //prevent it from actually pasting anything
-        e.preventDefault()
+        e.preventDefault();
 
         //grab origin index(X/Y index that was pasted into)
         let idX = parseInt(e.target.id[0]);
@@ -203,7 +203,8 @@ function ExcelTable(data) {
                 //console.log("X: " + idX + " - Y: " + idY + " - " + colItem);
                 
                 //text verify it
-                let validatedValue = textValidation(colItem);
+                let validatedValue = textValidation(colItem, 3, true);
+                //console.log("X: " + idX + " - Y: " + idY + " - " + validatedValue);
                 
                 //make the value equal to validated text
                 //colItem.value = validatedValue;

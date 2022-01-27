@@ -5,6 +5,13 @@ a:hover{
     text-decoration: none !important;
 }
 
+/* this is needed just for the Empire Signshop, and advisory font */
+#under-banner, #advisory{
+    font-family: "Garamond", "Georgia", Serif;
+}
+
+
+/* banner positioning */
 #title-banner{
     position: relative;
     background-image: url("../img/banner.jpg");
@@ -16,23 +23,43 @@ a:hover{
     margin: 0px auto;
     justify-content: center;
 }
-#banner-h3{
+#banner-h3,#under-banner,#advisory{
     color: white;
-    font-size: 45px;
     text-shadow: 1px 1px 2px black;
-    margin-top: 0px;
     position: absolute;
-    top: 0px;
     font-weight: 500;
+    margin-top: 0px;
+}
+#banner-h3{
+    font-size: 30px;
+    top: 0px;
 }
 #under-banner{
-    color: white;
-    text-shadow: 1px 1px 2px black;
-    font-size: 25px;
-    position: absolute;
-    top: 45px;
-    font-weight: 500;
-    margin-top: 0px;
+    font-size: 20px;
+    top: 35px;
+}
+#advisory{
+    font-size: 20px;
+    top: 60px;
+    color: red;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+/* by default positioning and sizing happens at the smallest screen, and is conditionally increased with larger screens here */
+@media (min-width: 768px) {
+    #banner-h3{
+        font-size: 45px;
+    }
+    #under-banner{
+        font-size: 25px;
+        top: 45px;
+    }
+    #advisory{
+        font-size: 25px;
+        top: 75px;
+        margin-left: 80px;
+        margin-right: 80px;
+    }
 }
 #admin-login-button{
     background-color: rgba(0, 0, 0, 0.0);
@@ -47,21 +74,30 @@ a:hover{
 }
 #status-search-bar{
     width: 300px;
-}
-
-.nav-h4-bar-bg{
-    background-color: #ddd;
-    border-radius: 5px;
-    margin-top: 5px;
-}
-.nav-h4-bar{
-    font-size: 20px;
-    padding-top: 5px;
+    height: 100%;
 }
 #example-img-id{
     max-height: 100%;
     max-width: 100%;
     margin: auto;
+}
+#status-search-bar-inner{
+    height: 100%;
+}
+
+
+/* classes */
+.nav-h4-bar-bg{
+    background-color: #ddd;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+.btn{
+    font-size: 12px !important;
+}
+.nav-h4-bar{
+    font-size: 15px;
+    padding-top: 5px;
 }
 .dropdown-toggle{
     width: 100%;
@@ -75,12 +111,22 @@ a:hover{
 .modal-dialog{
     max-width: 100% !important;
 }
-@media (min-width: 768px) {
-    .modal-dialog{
-        max-width: 768px !important;
-    }
-}
 .pinmag-row{
     border: 1px solid #ced4da;
     border-radius: 0.25rem;
+}
+.red-text{
+    color: red;
+}
+@media (min-width: 768px) {
+    .nav-h4-bar{
+        font-size: 18px;
+        margin-top: 4px;
+    }
+    .modal-dialog{
+        max-width: 768px !important;
+    }
+    .btn{
+        font-size: 18px !important;
+    }
 }

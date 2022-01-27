@@ -5,6 +5,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-weight: 600;
 }
 .title-parent{
     overflow: hidden;
@@ -24,80 +25,110 @@
 #new-tag-title{
     font-size: 26px;
 }
+
+
+.status-row:nth-child(odd),.status-green,.status-yellow,.status-red{
+    border-radius: 5px;
+}
 .status-row:nth-child(odd){
     background-color: #eee;
-    border-radius: 5px;
 }
 .status-green{
     background-color: #31EE1F;
-    border-radius: 5px;
 }
 .status-yellow{
     background-color: #F9F509;
-    border-radius: 5px;
 }
 .status-red{
     background-color: red;
-    border-radius: 5px;
 }
 .status-b-col-text{
     padding: 0px;
     margin: 0px;
 }
-.tag-green{
-    width: 270px;
+
+
+.tag-green,.tag-greenmag,.tag-bronze,.tag-blackdiamond,.tag-black{
     height: 90px;
-    background-color: darkgreen;
+    width: 270px;
     border-radius: 10px;
-    border: 3px solid #bbb;
+    border: 3px solid rgb(226, 226, 226);
+}
+.tag-green{
+    background-color: darkgreen;
     color: white;
 }
 .tag-greenmag{
-    width: 270px;
-    height: 90px;
     background-color: darkgreen;
-    border-radius: 10px;
-    border: 3px solid #bbb;
     color: white;
 }
-.dvgold-img{
-    background-image: url(../img/dvgold60.png);
-    height: 60px;
-    min-width: 60px;
-    position: relative;
-    left: 5px;
-    margin-top:10px;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-.dvwhite-img{
-    background-image: url(../img/dvwhite60.png);
-    height: 60px;
-    min-width: 60px;
-    position: relative;
-    left: 5px;
-    margin-top:10px;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-.dvpatrol-img{
-    background-image: url(../img/dvpatrol60.png);
-    height: 60px;
-    min-width: 60px;
-    position: relative;
-    left: 5px;
-    margin-top:10px;
-    background-repeat: no-repeat;
-    background-size: cover;
+.tag-black{
+    background-color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
 }
 .tag-bronze{
-    width: 270px;
-    height: 90px;
-    background-color: #734d26;
-    border-radius: 10px;
-    border: 3px solid #bbb;
-    color: white;
+    background-color: #93755a;
+    background-image: url(../img/bronzemetal-01.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: left center; 
+    color: black;
+    border: 3px solid black;
 }
+.tag-blackdiamond{
+    background-color: #dddddd;
+    color: black;
+    background-image: url(../img/silvermetal-01.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: left center; 
+    border: 3px solid black;
+}
+
+
+.dvgold-img,.dvwhite-img,.dvpatrol-img,.dvblackdiamond-img,.dvclub-img,.dvblack-img{
+    height: 60px;
+    min-width: 60px;
+    position: relative;
+    left: 5px;
+    margin-top:10px;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.dvgold-img{
+    background-image: url(../img/golddh.hi.res-01.png);
+}
+.dvwhite-img{
+    background-image: url(../img/whitedh.hi.res.png);
+}
+.dvblack-img{
+    background-image: url(../img/blackdh.hi.res.png);
+}
+.dvpatrol-img{
+    background-image: url(../img/dvpatrol.hi.res.png);
+}
+.dvblackdiamond-img{
+    background-image: url(../img/blackdiamond.hi.res.png);
+}
+.dvclub-img{
+    background-image: url(../img/club1981.hi.res.png);
+}
+
+
+.bronzemetal-img{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 270px;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.bronzemetal-img{
+    background-image: url(../img/bronzemetal-01.png);
+}
+
+
 .tag-basket{
     width: 270px;
     height: 120px;
@@ -111,7 +142,7 @@
     height: 120px;
     background-color: black;
     border-radius: 10px;
-    border: 1px solid #ccc;
+    border: 3px solid black;
     color: white;
     font-size: 50px;
     padding-top: 10px;
@@ -121,7 +152,7 @@
     height: 120px;
     background-color: black;
     border-radius: 10px;
-    border: 1px solid #ccc;
+    border: 3px solid black;
     color: white;
     font-size: 50px;
     padding-top: 10px;

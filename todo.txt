@@ -1,27 +1,44 @@
 last thing was doing:
--
 
+-remember to increment app version in the admin page(bottom)
 
-todo:
+todo(test before taking off):
+-text val whole word exceptions for "and, of, or, the"
 -make bronze tag look more metallic with stripes
--text validation delete . e.g. "Park City, UT." 
--/ & ' regex
--home page input by function, ski patrol(2gr/3outdor), lift ops(2gr/3o), guest svc(2dhgr),  instructors(3o)
--black bg tags, patrol tags, no magnets, using velcro only
--admin page .csv export to UV printer
--custom UV sign option
--redo patrol and outdoor badge colors
-x-special characters dont enter?? regex problem?
--spec character button inputs
--black dia lodge option
--admin page pin cooks, service mags help tips page, alt codes
--tag create TYPE in title, Regular Green, Patrol, Outdoor
+-line cant start with a "," (wait, but the system does it when trying to spell out a state)
+-render x2 x3 quantity in bot right corner
+-black diamond line on render
+-black bg indoor tag 
+-better info text under title
+-900 day db entry deletion every admin login
+-spec character clickable button inputs
+-black bg indoor tags
+-club 1981 silver bg tags
+
+
+admin page:
+-pin cooks, service mags help tips page, alt codes
+-mark as duplicate not printed red bg
+-delete admin print buttons for outdoor
+-separate page for undone tag search, or better search system when doing tags, organise by requestor or dept?
+-undo the double .csv output for old tags(make them like the ski patrol and regular outdoors)
+-make ALL outdoor tags output to 2 and 3 line multiline csv inputs without columns(so, combine the 2 and 3 liners)
+
 
 multi tags:
--better explainer main page
--no internal excel, only single input and paste with 1., 2., 3. order
--has no validation at all?
+-regular outdoor defaults to 2 magnets instead of 3 velcro
 -uploadable .csv file possibility?
+
+
+super future/not necessary but cool: 
+-drawing editor for custom signage
+-admin tool velvet outdoor tags, num rows = Math.floor((measured length - 6.6) / 3.25)
+-admin page .csv export to UV printer?
+-make an exact name 30 day checker confirmation window
+
+
+
+
 
 
 notes from 19 season:

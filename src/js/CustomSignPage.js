@@ -198,7 +198,7 @@ const CustomSignPage = () => {
                 </Col>
                 <Col xs="auto">
                     <h4 className="nav-h4-bar">
-                        NEW CUSTOM SIGN
+                        NEW CUSTOM ENGRAVED SIGN
                     </h4>
                 </Col>
                 <Col xs="auto" className="p-0">
@@ -305,7 +305,7 @@ const CustomSignPage = () => {
 
                             <Dropdown.Menu>
                                 <Dropdown.Item onClick={ e => { modifySubmitArray("attachment", "Velcro", false); }}>Velcro</Dropdown.Item>
-                                <Dropdown.Item onClick={ e => { modifySubmitArray("attachment", "Holes", false); }}>Holes</Dropdown.Item>
+                                {/*<Dropdown.Item onClick={ e => { modifySubmitArray("attachment", "Holes", false); }}>Holes</Dropdown.Item>*/}
                             </Dropdown.Menu>
                         </Dropdown>
                     </InputGroup>

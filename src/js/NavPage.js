@@ -13,6 +13,9 @@ function NavPage() {
                 <p id="under-banner">
                     Empire Signshop
                 </p>
+                <p id="advisory">
+                    
+                </p>
                 <NavLink to="/admin">
                     <Button id="admin-login-button">
 
